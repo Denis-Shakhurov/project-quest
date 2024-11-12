@@ -1,0 +1,16 @@
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL
+);
+
+DROP TABLE IF EXISTS games;
+
+CREATE TABLE games (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    user_id INT REFERENCES users(id),
+    countWin INT,
+    countLose INT
+);
