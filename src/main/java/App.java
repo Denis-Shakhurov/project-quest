@@ -1,6 +1,7 @@
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import controller.StartController;
+import controller.UserController;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import gg.jte.resolve.ResourceCodeResolver;
@@ -46,6 +47,9 @@ public class App {
         });
 
         app.get("/", StartController::index);
+        //app.get("/", UserController::index);
+        app.post("/", UserController::create);
+        app.get("/users/{id}", UserController::show);
 
         return app;
     }

@@ -1,16 +1,11 @@
 package dto;
 
 public class StartPage {
-    private String title;
 
-    public StartPage() {
-        this.title = "Приветствую!\n"
+    public static String getTitle() {
+        return "Приветствую!\n"
                 + "В данном приложении ты можешь испытать свои силы в логических играх.\n"
                 + "В каждой игре для победы нужно правильно ответить на 3 вопроса, если не верно ответить на один вопрос игра считается проигранной.\n"
                 + "Выбирай одну из ниже представленных игр и погнали.";
-    }
-
-    public String getTitle() {
-        return title;
     }
 }
