@@ -30,7 +30,7 @@ public class UserController {
     public static void create(Context ctx) throws SQLException {
         String name = ctx.formParam("name");
         var user = new User(name);
-        UserRepository.create(user);
+        UserRepository.save(user);
         var id = UserRepository.findByName(name).get().getId();
         ctx.redirect("/users/" + id);
     }

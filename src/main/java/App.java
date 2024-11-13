@@ -1,5 +1,6 @@
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import controller.GameController;
 import controller.StartController;
 import controller.UserController;
 import gg.jte.ContentType;
@@ -47,9 +48,10 @@ public class App {
         });
 
         app.get("/", StartController::index);
-        //app.get("/", UserController::index);
+        app.post("/users/{id}", GameController::create);
         app.post("/", UserController::create);
         app.get("/users/{id}", UserController::show);
+        app.get("/games/{id}", GameController::show);
 
         return app;
     }

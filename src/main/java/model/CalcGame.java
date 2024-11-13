@@ -5,16 +5,39 @@ import java.util.List;
 import java.util.Map;
 
 public class CalcGame extends Game {
+    private Long id;
+    private Long userId;
     private static final int NUMBER_OF_ROUNDS = 3;
     private static final int MAX_INT = 10;
 
-    public CalcGame(String name) {
-        super(name);
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public Long getUserId() {
+        return userId;
+    }
+
+    @Override
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     @Override
     public String getDescription() {
         return "Дать верный ответ для математичнской операции.";
+    }
+
+    @Override
+    public String getName() {
+        return "CalcGame";
     }
 
     @Override

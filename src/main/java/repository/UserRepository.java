@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class UserRepository extends BaseRepository {
 
-    public static void create(User user) throws SQLException {
+    public static void save(User user) throws SQLException {
         var sql = "INSERT INTO users (name) VALUES (?)";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {

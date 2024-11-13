@@ -23,7 +23,7 @@ content = @`
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <button type="submit" class="h-100 btn btn-lg btn-primary px-sm-3">Выбрать игру</button>
+                                    <button type="submit" class="h-100 btn btn-lg btn-primary px-sm-3">Далее</button>
                                 </div>
                             </div>
                         </form>
@@ -32,7 +32,7 @@ content = @`
                                 <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Имя</th>
+                                    <th scope="col">Срисок игроков</th>
                                 </tr>
                                 </thead>
                                 @for(var user : page.getUsers())
