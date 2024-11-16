@@ -1,5 +1,4 @@
 @import dto.UserPage
-@import dto.GamePage
 @param UserPage page
 
 @template.layout.page(
@@ -14,9 +13,6 @@ content = @`
             </div>
                 </div>
             </form>
-            <div>
-                <p></p>
-            </div>
         </div>
     </section>
 `

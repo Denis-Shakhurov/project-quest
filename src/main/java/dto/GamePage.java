@@ -2,7 +2,7 @@ package dto;
 
 import model.Game;
 
-public class GamePage {
+public class GamePage extends BasePage {
     private Game game;
 
     public GamePage(Game game) {

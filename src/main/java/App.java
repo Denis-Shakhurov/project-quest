@@ -52,6 +52,7 @@ public class App {
         app.post("/", UserController::create);
         app.get("/users/{id}", UserController::show);
         app.get("/games/{id}", GameController::show);
+        app.post("/games/{id}", GameController::show);
 
         return app;
     }
