@@ -1,5 +1,7 @@
 package model;
 
+import model.game.Game;
+
 import java.util.List;
 
 public class User {

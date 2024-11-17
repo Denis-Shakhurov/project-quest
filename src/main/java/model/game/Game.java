@@ -1,4 +1,4 @@
-package model;
+package model.game;
 
 import java.util.List;
 import java.util.Map;
@@ -9,7 +9,7 @@ public abstract class Game {
     private int countWin;
     private int countLose;
     public abstract String getDescription();
-    public abstract List<Map<String, String>> getQuestionAndAnswer();
+    public abstract Map<String, String> getQuestionAndAnswer();
     public abstract String getName();
 
     public Long getId() {

@@ -1,6 +1,6 @@
 package dto;
 
-import model.Game;
+import model.game.Game;
 
 public class GamePage extends BasePage {
     private Game game;

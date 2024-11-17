@@ -3,13 +3,12 @@ package controller;
 import dto.GamePage;
 import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
-import model.CalcGame;
-import model.Game;
+import model.FactoryGame;
+import model.game.Game;
 import repository.GameRepository;
 
 import java.sql.SQLException;
 import java.util.ArrayDeque;
-import java.util.Map;
 
 import static io.javalin.rendering.template.TemplateUtil.model;
 
@@ -18,15 +17,14 @@ public class GameController {
     private static int count = 0;
 
     public static void create(Context ctx) throws SQLException {
-        String name = ctx.formParam("name");
+        FactoryGame factoryGame = new FactoryGame();
+        String nameGame = ctx.formParam("game");
         var userId = ctx.pathParamAsClass("id", Long.class).get();
-        Game game;
-        //if (name.equals("CalcGame")) {
-            game = new CalcGame();
-            game.setUserId(userId);
-            var idGame = GameRepository.save(game);
-            ctx.redirect("/games/" + idGame);
-        //}
+        Game game = factoryGame.getGame(nameGame);
+        game.setUserId(userId);
+        var idGame = GameRepository.save(game);
+        ctx.redirect("/games/" + idGame);
+
     }
 
     public static void show(Context ctx) throws SQLException {
@@ -43,13 +41,14 @@ public class GameController {
             count = 0;
         }
 
-        for (Map<String, String> map : game.getQuestionAndAnswer()) {
-            for (String question : map.keySet()) {
-                answers.add(map.get(question));
-                page.setCurrentAnswer(map.get(question));
-                page.setQuestion(question);
-            }
+        var questionAndAnswer = game.getQuestionAndAnswer();
+
+        for (String question : questionAndAnswer.keySet()) {
+            answers.add(questionAndAnswer.get(question));
+            page.setCurrentAnswer(questionAndAnswer.get(question));
+            page.setQuestion(question);
         }
+
 
         if (answers.size() > 1) {
             var answer = answers.poll();

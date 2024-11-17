@@ -1,7 +1,8 @@
 package repository;
 
-import model.CalcGame;
-import model.Game;
+import model.FactoryGame;
+import model.game.CalcGame;
+import model.game.Game;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -50,8 +51,9 @@ public class GameRepository extends BaseRepository {
             stmt.setLong(1, id);
             var resultSet = stmt.executeQuery();
             if (resultSet.next()) {
+                var factoryGame = new FactoryGame();
                 var name = resultSet.getString("name");
-                var game = new CalcGame();
+                var game = factoryGame.getGame(name);
                 game.setId(id);
                 return Optional.of(game);
             }

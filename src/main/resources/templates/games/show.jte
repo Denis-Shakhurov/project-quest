@@ -21,6 +21,7 @@ content = @`
                     </div>
                 </div>
             </form>
+            <p>${page.getFlash()}</p>
         </div>
     </section>
 `
