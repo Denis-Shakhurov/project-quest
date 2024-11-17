@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class GameRepository extends BaseRepository {
 
-    public static void save(Game game) throws SQLException {
+    public static Long save(Game game) throws SQLException {
         var sql = "INSERT INTO games (name, user_id) VALUES (?, ?)";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -23,6 +23,7 @@ public class GameRepository extends BaseRepository {
                 throw new SQLException("DB have not returned an id after saving an entity");
             }
         }
+        return game.getId();
     }
 
     public static Optional<Game> findByName(String str) throws SQLException {

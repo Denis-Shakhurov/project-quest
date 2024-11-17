@@ -19,7 +19,6 @@ content = @`
                     <div class="col">
                         <button type="submit" class="h-100 btn btn-lg btn-primary px-sm-3">Проверить</button>
                     </div>
-                    <p>${page.getCurrentAnswer()} ${page.getAnswer()} ${page.getFlash()}</p>
                 </div>
             </form>
         </div>

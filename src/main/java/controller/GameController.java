@@ -8,27 +8,24 @@ import model.Game;
 import repository.GameRepository;
 
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayDeque;
 import java.util.Map;
 
 import static io.javalin.rendering.template.TemplateUtil.model;
 
 public class GameController {
-    private static List<String> answers = new LinkedList<>();
-    private static List<String> currentAnswers = new LinkedList<>();
+    private static ArrayDeque<String> answers = new ArrayDeque<>();
     private static int count = 0;
 
     public static void create(Context ctx) throws SQLException {
-        String name = ctx.queryParam("name");
+        String name = ctx.formParam("name");
         var userId = ctx.pathParamAsClass("id", Long.class).get();
         Game game;
         //if (name.equals("CalcGame")) {
             game = new CalcGame();
             game.setUserId(userId);
-            GameRepository.save(game);
-            var g = GameRepository.findByName("CalcGame").get();
-            ctx.redirect("/games/" + g.getId());
+            var idGame = GameRepository.save(game);
+            ctx.redirect("/games/" + idGame);
         //}
     }
 
@@ -38,27 +35,37 @@ public class GameController {
                 .orElseThrow(() -> new NotFoundResponse("Entity with id = " + id + " not found"));
 
         var page = new GamePage(game);
-        var answer = ctx.formParam("answer");
-        if (answer != null) {
-            answers.add(answer);
+        var answerUser = ctx.formParam("answer");
+        if (answerUser != null) {
+            answers.add(answerUser);
+        } else {
+            answers.clear();
+            count = 0;
         }
-        page.setAnswer(answer);
 
         for (Map<String, String> map : game.getQuestionAndAnswer()) {
             for (String question : map.keySet()) {
-                currentAnswers.add(map.get(question));
+                answers.add(map.get(question));
                 page.setCurrentAnswer(map.get(question));
                 page.setQuestion(question);
             }
         }
 
-        if (!answers.isEmpty() && !currentAnswers.isEmpty()) {
-            if (answers.get(count).equals(currentAnswers.get(count))) {
-                page.setFlash("correct!");
+        if (answers.size() > 1) {
+            var answer = answers.poll();
+            var currentAnswer = answers.poll();
+            if (currentAnswer.equals(answer)) {
+                page.setFlash("Верно!");
             } else {
                 page.setFlash("fail!");
+                game.setCountLose(1);
             }
             count++;
+        }
+
+        if (count == 3) {
+            page.setFlash("Игра окончена");
+            game.setCountWin(1);
         }
 
         ctx.render("games/show.jte", model("page", page));
