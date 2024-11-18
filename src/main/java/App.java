@@ -2,6 +2,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import controller.GameController;
 import controller.StartController;
+import controller.StatisticController;
 import controller.UserController;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
@@ -52,6 +53,7 @@ public class App {
         app.get("/users/{id}", UserController::show);
         app.get("/games/{id}", GameController::show);
         app.post("/games/{id}", GameController::show);
+        app.get("/statistic", StatisticController::index);
 
         return app;
     }

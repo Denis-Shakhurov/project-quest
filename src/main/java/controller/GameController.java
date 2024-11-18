@@ -24,7 +24,7 @@ public class GameController {
         game.setUserId(userId);
         var idGame = GameRepository.save(game);
         ctx.redirect("/games/" + idGame);
-
+        //ctx.status(201);
     }
 
     public static void show(Context ctx) throws SQLException {
@@ -67,6 +67,7 @@ public class GameController {
             game.setCountWin(1);
         }
 
-        ctx.render("games/show.jte", model("page", page));
+        GameRepository.update(game);
+        ctx.render("games/show.jte", model("page", page)).status(200);
     }
 }

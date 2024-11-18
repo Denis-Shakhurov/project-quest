@@ -11,6 +11,6 @@ CREATE TABLE games (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     user_id INT REFERENCES users(id),
-    countWin INT,
-    countLose INT
+    win INT,
+    lose INT
 );
