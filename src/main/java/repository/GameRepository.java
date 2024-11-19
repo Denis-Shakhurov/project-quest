@@ -37,8 +37,14 @@ public class GameRepository extends BaseRepository {
             if (resultSet.next()) {
                 var factoryGame = new FactoryGame();
                 var name = resultSet.getString("name");
+                var userId = resultSet.getLong("user_id");
+                var countWin = resultSet.getInt("win");
+                var countLose = resultSet.getInt("lose");
                 var game = factoryGame.getGame(name);
                 game.setId(id);
+                game.setUserId(userId);
+                game.setCountWin(countWin);
+                game.setCountLose(countLose);
                 return Optional.of(game);
             }
         }

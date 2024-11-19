@@ -23,8 +23,8 @@ public class GameController {
         Game game = factoryGame.getGame(nameGame);
         game.setUserId(userId);
         var idGame = GameRepository.save(game);
+        ctx.status(201);
         ctx.redirect("/games/" + idGame);
-        //ctx.status(201);
     }
 
     public static void show(Context ctx) throws SQLException {
@@ -54,16 +54,16 @@ public class GameController {
             var answer = answers.poll();
             var currentAnswer = answers.poll();
             if (currentAnswer.equals(answer)) {
-                page.setFlash("Верно!");
+                page.setFlash("Correct");
             } else {
-                page.setFlash("fail!");
+                page.setFlash("Fail!");
                 game.setCountLose(1);
             }
             count++;
         }
 
         if (count == 3) {
-            page.setFlash("Игра окончена");
+            page.setFlash("End game");
             game.setCountWin(1);
         }
 

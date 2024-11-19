@@ -5,6 +5,25 @@
 content = @`
     <section>
         <div class="container-lg mt-5">
+            @if (page.getFlash() != null && page.getFlash().equals("End game"))
+                <div class="alert alert-success w-25 p-3 position-absolute top-50 start-50 translate-middle" role="alert">
+                    <h4 class="alert-heading text-center">Ура, победа!</h4>
+                    <hr>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-primary"><a href="/">На главную</a></button>
+                        <button type="button" class="btn btn-outline-primary"><a href="/users/${page.getGame().getUserId()}">К списку игр</a></button>
+                    </div>
+                </div>
+            @elseif (page.getFlash() != null && page.getFlash().equals("Fail!"))
+                <div class="alert alert-danger w-25 p-3 position-absolute top-50 start-50 translate-middle" role="alert">
+                    <h4 class="alert-heading text-center">Увы, поражение!</h4>
+                    <hr>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-primary"><a href="/">На главную</a></button>
+                        <button type="button" class="btn btn-outline-primary"><a href="/users/${page.getGame().getUserId()}">К списку игр</a></button>
+                    </div>
+                </div>
+            @else
             <h1>${page.getGame().getName()}</h1>
             <p>${page.getGame().getDescription()}: ${page.getQuestion()}</p>
             <form action="/games/${page.getGame().getId()}" method="post" class="rss-form text-body">
@@ -22,6 +41,7 @@ content = @`
                 </div>
             </form>
             <p>${page.getFlash()}</p>
+            @endif
         </div>
     </section>
 `

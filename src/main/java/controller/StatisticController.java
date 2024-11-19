@@ -15,6 +15,6 @@ public class StatisticController {
         var users = UserRepository.getAll();
         var games = GameRepository.getAll();
         var page = new StatisticPage(games, users);
-        ctx.render("statistic/index.jte", model("page", page));
+        ctx.render("statistic/index.jte", model("page", page)).status(200);
     }
 }
