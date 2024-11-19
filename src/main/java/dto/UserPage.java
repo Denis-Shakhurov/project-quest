@@ -5,7 +5,7 @@ import model.User;
 
 import java.util.List;
 
-public class UserPage {
+public class UserPage extends BasePage {
     private User user;
     private List<Game> games;
 

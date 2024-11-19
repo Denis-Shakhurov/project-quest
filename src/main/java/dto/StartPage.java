@@ -1,6 +1,6 @@
 package dto;
 
-public class StartPage {
+public class StartPage extends BasePage {
 
     public static String getTitle() {
         return "Приветствую!\n"

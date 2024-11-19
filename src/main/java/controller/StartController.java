@@ -14,6 +14,7 @@ public class StartController {
     public static void index(Context ctx) throws SQLException {
         var users = UserRepository.getAll();
         var page = new UsersPage(users);
+        page.setFlash(ctx.consumeSessionAttribute("flash"));
         ctx.render("index.jte", model("page", page));
     }
 }

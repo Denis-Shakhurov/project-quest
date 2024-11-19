@@ -3,24 +3,33 @@
 
 @template.layout.page(
 content = @`
+    <main class="flax-grow-1">
+        @if(page.getFlash() != null)
+            <div class="rounded-0 m-0 alert alert-dismissible fade show alert-success" role="alert">
+                <p class="m-0">${page.getFlash()}</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
     <section>
         <div class="container-lg mt-5">
-            @if (page.getFlash() != null && page.getFlash().equals("End game"))
+            @if (page.getStatusAnswer() != null && page.getStatusAnswer().equals("End game"))
                 <div class="alert alert-success w-25 p-3 position-absolute top-50 start-50 translate-middle" role="alert">
                     <h4 class="alert-heading text-center">Ура, победа!</h4>
                     <hr>
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-outline-primary"><a href="/">На главную</a></button>
                         <button type="button" class="btn btn-outline-primary"><a href="/users/${page.getGame().getUserId()}">К списку игр</a></button>
+                        <button type="button" class="btn btn-outline-primary"><a href="/statistic">Статистика игр</a></button>
                     </div>
                 </div>
-            @elseif (page.getFlash() != null && page.getFlash().equals("Fail!"))
+            @elseif (page.getStatusAnswer() != null && page.getStatusAnswer().equals("Fail!"))
                 <div class="alert alert-danger w-25 p-3 position-absolute top-50 start-50 translate-middle" role="alert">
                     <h4 class="alert-heading text-center">Увы, поражение!</h4>
                     <hr>
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-outline-primary"><a href="/">На главную</a></button>
                         <button type="button" class="btn btn-outline-primary"><a href="/users/${page.getGame().getUserId()}">К списку игр</a></button>
+                        <button type="button" class="btn btn-outline-primary"><a href="/statistic">Статистика игр</a></button>
                     </div>
                 </div>
             @else
@@ -40,9 +49,9 @@ content = @`
                     </div>
                 </div>
             </form>
-            <p>${page.getFlash()}</p>
             @endif
         </div>
     </section>
+    </main>
 `
 )

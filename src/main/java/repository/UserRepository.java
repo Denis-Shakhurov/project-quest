@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class UserRepository extends BaseRepository {
 
-    public static void save(User user) throws SQLException {
+    public static Long save(User user) throws SQLException {
         var sql = "INSERT INTO users (name) VALUES (?)";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -22,6 +22,7 @@ public class UserRepository extends BaseRepository {
             } else {
                 throw new SQLException("DB have not returned an id after saving an entity");
             }
+            return user.getId();
         }
     }
 
@@ -58,20 +59,21 @@ public class UserRepository extends BaseRepository {
         return Optional.empty();
     }
 
-    public static Optional<User> findByName(String str) throws SQLException {
+    public static boolean findByName(String str) throws SQLException {
         var sql = "SELECT * FROM users WHERE name = ?";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, str);
             var resultSet = stmt.executeQuery();
+            List<User> users = new ArrayList<>();
             if (resultSet.next()) {
                 var name = resultSet.getString("name");
                 var id = resultSet.getLong("id");
                 var user = new User(name);
                 user.setId(id);
-                return Optional.of(user);
+                users.add(user);
             }
+            return users.isEmpty();
         }
-        return Optional.empty();
     }
 }

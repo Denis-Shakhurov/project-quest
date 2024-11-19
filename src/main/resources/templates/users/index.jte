@@ -20,7 +20,7 @@ content = @`
                         <tbody>
                         <tr>
                             <th scope="row">${page.getUsers().indexOf(user) + 1}</th>
-                            <td><a href="users/"${user.getId()}>${user.getName()}</a></td>
+                            <td><a href="/users/"${user.getId()}>${user.getName()}</a></td>
                         </tr>
                         </tbody>
                     @endfor

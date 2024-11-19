@@ -3,6 +3,7 @@
 
 @template.layout.page(
 content = @`
+    <main class="flax-grow-1">
     <section>
         <div class="container-lg mt-5">
             <h1>${page.getUser().getName()}, выбери игру.</h1>
@@ -10,20 +11,13 @@ content = @`
                 <div class="row">
                     <div class="col">
                         <button type="submit" name="game" value="CalcGame" class="h-100 btn btn-lg btn-primary px-sm-3">CalcGame</button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
                         <button type="submit" name="game" value="EvenGame" class="h-100 btn btn-lg btn-primary px-sm-3">EvenGame</button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
                         <button type="submit" name="game" value="ProgressionGame" class="h-100 btn btn-lg btn-primary px-sm-3">ProgressionGame</button>
                     </div>
                 </div>
             </form>
         </div>
     </section>
+    </main>
 `
 )

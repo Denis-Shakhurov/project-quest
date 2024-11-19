@@ -4,6 +4,7 @@ import dto.UserPage;
 import dto.UsersPage;
 import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
+import io.javalin.validation.ValidationException;
 import model.User;
 import repository.UserRepository;
 
@@ -24,14 +25,30 @@ public class UserController {
         var user = UserRepository.findById(id)
                 .orElseThrow(() -> new NotFoundResponse("Entity with id = " + id + " not found"));
         var page = new UserPage(user);
+        page.setFlash(ctx.consumeSessionAttribute("flash"));
         ctx.render("users/show.jte", model("page", page));
     }
 
     public static void create(Context ctx) throws SQLException {
         String name = ctx.formParam("name");
-        var user = new User(name);
-        UserRepository.save(user);
-        var id = UserRepository.findByName(name).get().getId();
-        ctx.redirect("/users/" + id);
+        try {
+            ctx.formParamAsClass("name", String.class)
+                    .check(value -> {
+                        try {
+                            return UserRepository.findByName(name);
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }, "Игрок уже существует").get();
+            var user = new User(name);
+            var id = UserRepository.save(user);
+            ctx.sessionAttribute("flash", "Игрок создан");
+            ctx.status(201);
+            ctx.redirect("/users/" + id);
+        } catch (ValidationException e) {
+            ctx.sessionAttribute("flash", "Игрок уже существует");
+            ctx.status(422);
+            ctx.redirect("/");
+        }
     }
 }

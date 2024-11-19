@@ -45,7 +45,6 @@ public class GameController {
 
         for (String question : questionAndAnswer.keySet()) {
             answers.add(questionAndAnswer.get(question));
-            page.setCurrentAnswer(questionAndAnswer.get(question));
             page.setQuestion(question);
         }
 
@@ -54,20 +53,21 @@ public class GameController {
             var answer = answers.poll();
             var currentAnswer = answers.poll();
             if (currentAnswer.equals(answer)) {
-                page.setFlash("Correct");
+                ctx.sessionAttribute("flash", "Верно!");
+                count++;
             } else {
-                page.setFlash("Fail!");
+                page.setStatusAnswer("Fail!");
                 game.setCountLose(1);
             }
-            count++;
         }
 
         if (count == 3) {
-            page.setFlash("End game");
+            page.setStatusAnswer("End game");
             game.setCountWin(1);
         }
 
         GameRepository.update(game);
+        page.setFlash(ctx.consumeSessionAttribute("flash"));
         ctx.render("games/show.jte", model("page", page)).status(200);
     }
 }

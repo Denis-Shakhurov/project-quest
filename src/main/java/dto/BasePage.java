@@ -2,8 +2,7 @@ package dto;
 
 public class BasePage {
     private String flash;
-    private String currentAnswer;
-    private String answer;
+    private String statusAnswer;
     private String question;
 
     public String getFlash() {
@@ -14,14 +13,6 @@ public class BasePage {
         this.flash = flash;
     }
 
-    public String getCurrentAnswer() {
-        return currentAnswer;
-    }
-
-    public void setCurrentAnswer(String currentAnswer) {
-        this.currentAnswer = currentAnswer;
-    }
-
     public String getQuestion() {
         return question;
     }
@@ -30,11 +21,11 @@ public class BasePage {
         this.question = question;
     }
 
-    public String getAnswer() {
-        return answer;
+    public String getStatusAnswer() {
+        return statusAnswer;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
+    public void setStatusAnswer(String statusAnswer) {
+        this.statusAnswer = statusAnswer;
     }
 }
