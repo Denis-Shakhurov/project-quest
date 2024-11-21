@@ -1,21 +1,30 @@
 import io.javalin.Javalin;
 import io.javalin.testtools.JavalinTest;
+import model.FactoryGame;
+import model.User;
+import model.game.Game;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import repository.GameRepository;
+import repository.UserRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AppTest {
     Javalin app;
-    public static MockWebServer mockBackEnd;
+    private static MockWebServer mockBackEnd;
+    private final FactoryGame factoryGame = new FactoryGame();
+
 
     @BeforeAll
     static void setUpMock() throws IOException {
@@ -47,6 +56,55 @@ public class AppTest {
 
             assertEquals(response.code(), 200);
             assertTrue(response.body().string().contains("QuestGame"));
+        });
+    }
+
+    @Test
+    public void statisticPageTest() {
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/statistic");
+
+            assertEquals(response.code(), 200);
+            assertTrue(response.body().string().contains("Статистика игр"));
+        });
+    }
+
+    @Test
+    public void pageGameShowNoFoundTest() {
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/games/9999999");
+
+            assertEquals(response.code(), 404);
+        });
+    }
+
+    @Test
+    public void showUserTest() throws SQLException {
+        User user = new User("Elf");
+        UserRepository.save(user);
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/users/" + user.getId());
+
+            assertEquals(response.code(), 200);
+            assertTrue(response.body().string().contains(user.getName()));
+        });
+    }
+
+    @Test
+    public void showGameTest() throws SQLException {
+        User user = new User("Martin");
+        UserRepository.save(user);
+
+        Game game = factoryGame.getGame("CalcGame");
+        game.setUserId(user.getId());
+        GameRepository.save(game);
+
+        JavalinTest.test(app, (server, client) -> {
+            var response = client.get("/games/" + game.getId());
+
+            assertEquals(response.code(), 200);
+            assertTrue(response.body().string().contains(game.getDescription()));
         });
     }
 }

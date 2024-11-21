@@ -15,7 +15,7 @@ content = @`
                         <table class="table table-bordered table-hover mt-3">
                             <thead>
                             <tr>
-                                <th scope="col">#</th>
+                                <th scope="col">id</th>
                                 <th scope="col">Имя игрока</th>
                                 <th scope="col">Название игры</th>
                                 <th scope="col">Количество побед</th>
@@ -26,7 +26,7 @@ content = @`
                             @for(var game : page.getGames().stream().filter(g -> g.getUserId().equals(user.getId())).toList())
                                 <tbody>
                                     <tr>
-                                        <th scope="row">${page.getUsers().indexOf(user) + 1}</th>
+                                        <th scope="row">${user.getId()}</th>
                                         <td><a href="/users/${(user.getId())}">${user.getName()}</a></td>
                                         <th scope="row">${game.getName()}</th>
                                         <th scope="row">${game.getCountWin()}</th>
