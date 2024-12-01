@@ -5,7 +5,9 @@ import model.game.Game;
 
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class GameRepository extends BaseRepository {
 
@@ -69,15 +71,17 @@ public class GameRepository extends BaseRepository {
             var resultSet = stmt.executeQuery();
             List<Game> games = new ArrayList<>();
             while (resultSet.next()) {
-                String name = resultSet.getNString("name");
+                String name = resultSet.getString("name");
                 Long userId = resultSet.getLong("user_id");
                 int countWin = resultSet.getInt("count_win");
                 int countLose = resultSet.getInt("count_lose");
+
                 FactoryGame factoryGame = new FactoryGame();
                 Game game = factoryGame.getGame(name);
                 game.setUserId(userId);
                 game.setCountWin(countWin);
                 game.setCountLose(countLose);
+
                 games.add(game);
             }
             return games;

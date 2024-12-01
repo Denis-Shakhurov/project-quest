@@ -5,7 +5,6 @@ import utils.RandomInt;
 import java.util.Map;
 
 public class EvenGame extends Game {
-    private RandomInt randomInt = new RandomInt();
     private static final int MAX_INT = 200;
 
     @Override
@@ -15,7 +14,7 @@ public class EvenGame extends Game {
 
     @Override
     public Map<String, String> getQuestionAndAnswer() {
-        int number = randomInt.getRandomInt(1, MAX_INT);
+        int number = RandomInt.getRandomInt(1, MAX_INT);
         return isEven(number)
                 ? Map.of(String.valueOf(number), "да")
                 : Map.of(String.valueOf(number), "нет");

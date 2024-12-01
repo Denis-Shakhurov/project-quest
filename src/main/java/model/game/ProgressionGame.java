@@ -5,7 +5,6 @@ import utils.RandomInt;
 import java.util.Map;
 
 public class ProgressionGame extends Game {
-    private RandomInt randomInt = new RandomInt();
     private static final int LENGTH = 10;
     private static final int MAX_INT = 100;
     private static final int MAX_INDEX = 5;
@@ -17,10 +16,10 @@ public class ProgressionGame extends Game {
 
     @Override
     public Map<String, String> getQuestionAndAnswer() {
-        int start = randomInt.getRandomInt(0, MAX_INT);
-        int index = randomInt.getRandomInt(1, MAX_INDEX);
+        int start = RandomInt.getRandomInt(0, MAX_INT);
+        int index = RandomInt.getRandomInt(1, MAX_INDEX);
         String[] progression = getProgression(start, index);
-        int indexEllipsis = randomInt.getRandomInt(0, LENGTH - 1);
+        int indexEllipsis = RandomInt.getRandomInt(0, LENGTH - 1);
         String answer = progression[indexEllipsis];
         String question = getProgressionWithEllipsis(indexEllipsis, progression);
         return Map.of(question, answer);

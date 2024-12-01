@@ -23,9 +23,9 @@ content = @`
                                 <th scope="col">Количество поражений</th>
                             </tr>
                         </thead>
-                        @for(var user : page.getUsers())
-                            @for(var game : page.getGames().stream().filter(g -> g.getUserId().equals(user.getId())).toList())
-                                <tbody>
+                            @for(var user : page.getUsers())
+                                @for(var game : page.getGames().stream().filter(g -> g.getUserId().equals(user.getId())).toList())
+                                    <tbody>
                                     <tr>
                                         <th scope="row">${user.getId()}</th>
                                         <td><a href="${NamedRoutes.userPath(user.getId())}">${user.getName()}</a></td>
@@ -33,9 +33,9 @@ content = @`
                                         <th scope="row">${game.getCountWin()}</th>
                                         <th scope="row">${game.getCountLose()}</th>
                                     </tr>
-                                </tbody>
+                                    </tbody>
+                                @endfor
                             @endfor
-                        @endfor
                         </table>
                     </div>
                 </div>
