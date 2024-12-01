@@ -54,7 +54,7 @@ public class AppTest {
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/");
 
-            assertEquals(response.code(), 200);
+            assertEquals(200, response.code());
             assertTrue(response.body().string().contains("QuestGame"));
         });
     }
@@ -64,7 +64,7 @@ public class AppTest {
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/statistic");
 
-            assertEquals(response.code(), 200);
+            assertEquals(200, response.code());
             assertTrue(response.body().string().contains("Статистика игр"));
         });
     }
@@ -74,7 +74,7 @@ public class AppTest {
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/games/9999999");
 
-            assertEquals(response.code(), 404);
+            assertEquals(404, response.code());
         });
     }
 
@@ -86,7 +86,7 @@ public class AppTest {
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/users/" + user.getId());
 
-            assertEquals(response.code(), 200);
+            assertEquals(200, response.code());
             assertTrue(response.body().string().contains(user.getName()));
         });
     }
@@ -103,7 +103,7 @@ public class AppTest {
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/games/" + game.getId());
 
-            assertEquals(response.code(), 200);
+            assertEquals(200, response.code());
             assertTrue(response.body().string().contains(game.getDescription()));
         });
     }

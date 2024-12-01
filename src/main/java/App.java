@@ -10,6 +10,7 @@ import gg.jte.resolve.ResourceCodeResolver;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
 import repository.BaseRepository;
+import utils.NamedRoutes;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -47,13 +48,13 @@ public class App {
             config.bundledPlugins.enableDevLogging();
         });
 
-        app.get("/", StartController::index);
-        app.post("/users/{id}", GameController::create);
-        app.post("/", UserController::create);
-        app.get("/users/{id}", UserController::show);
-        app.get("/games/{id}", GameController::show);
-        app.post("/games/{id}", GameController::show);
-        app.get("/statistic", StatisticController::index);
+        app.get(NamedRoutes.startPath(), StartController::index);
+        app.post(NamedRoutes.userPath("{id}"), GameController::create);
+        app.post(NamedRoutes.startPath(), UserController::create);
+        app.get(NamedRoutes.userPath("{id}"), UserController::show);
+        app.get(NamedRoutes.gamePath("{id}"), GameController::show);
+        app.post(NamedRoutes.gamePath("{id}"), GameController::show);
+        app.get(NamedRoutes.statisticPath(), StatisticController::index);
 
         return app;
     }

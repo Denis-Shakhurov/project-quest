@@ -1,4 +1,5 @@
 @import dto.UsersPage
+@import utils.NamedRoutes
 @param UsersPage page
 
 @template.layout.page(
@@ -20,7 +21,7 @@ content = @`
                         <tbody>
                         <tr>
                             <th scope="row">${page.getUsers().indexOf(user) + 1}</th>
-                            <td><a href="/users/"${user.getId()}>${user.getName()}</a></td>
+                            <td><a href="${NamedRoutes.userPath(user.getId())}">${user.getName()}</a></td>
                         </tr>
                         </tbody>
                     @endfor

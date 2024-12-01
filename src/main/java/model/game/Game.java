@@ -1,5 +1,7 @@
 package model.game;
 
+import utils.RandomInt;
+
 import java.util.List;
 import java.util.Map;
 

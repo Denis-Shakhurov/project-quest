@@ -1,23 +1,26 @@
 package model.game;
 
+import utils.RandomInt;
+
 import java.util.Map;
 
 public class ProgressionGame extends Game {
+    private RandomInt randomInt = new RandomInt();
     private static final int LENGTH = 10;
     private static final int MAX_INT = 100;
     private static final int MAX_INDEX = 5;
 
     @Override
     public String getDescription() {
-        return "В данной игре нужно дать ответ какое число пропущено в прогрессии.";
+        return "В данной игре нужно дать ответ какое число пропущено в прогрессии";
     }
 
     @Override
     public Map<String, String> getQuestionAndAnswer() {
-        int start = getRandomInt(0, MAX_INT);
-        int index = getRandomInt(1, MAX_INDEX);
+        int start = randomInt.getRandomInt(0, MAX_INT);
+        int index = randomInt.getRandomInt(1, MAX_INDEX);
         String[] progression = getProgression(start, index);
-        int indexEllipsis = getRandomInt(0, LENGTH - 1);
+        int indexEllipsis = randomInt.getRandomInt(0, LENGTH - 1);
         String answer = progression[indexEllipsis];
         String question = getProgressionWithEllipsis(indexEllipsis, progression);
         return Map.of(question, answer);
@@ -38,12 +41,8 @@ public class ProgressionGame extends Game {
     }
 
     private String getProgressionWithEllipsis(int indexEllipsis, String[] progression) {
-        progression[indexEllipsis] = "..";
+        progression[indexEllipsis] = "...";
         String progressionWithEllipsis = String.join(" ", progression);
         return progressionWithEllipsis;
-    }
-
-    private int getRandomInt(int min, int max) {
-        return (int) (min + Math.random() * max + 1);
     }
 }

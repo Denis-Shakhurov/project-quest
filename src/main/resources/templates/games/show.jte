@@ -1,4 +1,5 @@
 @import dto.GamePage
+@import utils.NamedRoutes
 @param GamePage page
 
 @template.layout.page(
@@ -17,9 +18,9 @@ content = @`
                     <h4 class="alert-heading text-center">Ура, победа!</h4>
                     <hr>
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-outline-primary"><a href="/">На главную</a></button>
-                        <button type="button" class="btn btn-outline-primary"><a href="/users/${page.getGame().getUserId()}">К списку игр</a></button>
-                        <button type="button" class="btn btn-outline-primary"><a href="/statistic">Статистика игр</a></button>
+                        <button type="button" class="btn btn-outline-primary"><a href="${NamedRoutes.startPath()}">На главную</a></button>
+                        <button type="button" class="btn btn-outline-primary"><a href="${NamedRoutes.userPath(page.getGame().getUserId())}">К списку игр</a></button>
+                        <button type="button" class="btn btn-outline-primary"><a href="${NamedRoutes.statisticPath()}">Статистика игр</a></button>
                     </div>
                 </div>
             @elseif (page.getStatusAnswer() != null && page.getStatusAnswer().equals("Fail!"))
@@ -27,15 +28,15 @@ content = @`
                     <h4 class="alert-heading text-center">Увы, поражение!</h4>
                     <hr>
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-outline-primary"><a href="/">На главную</a></button>
-                        <button type="button" class="btn btn-outline-primary"><a href="/users/${page.getGame().getUserId()}">К списку игр</a></button>
-                        <button type="button" class="btn btn-outline-primary"><a href="/statistic">Статистика игр</a></button>
+                        <button type="button" class="btn btn-outline-primary"><a href="${NamedRoutes.startPath()}">На главную</a></button>
+                        <button type="button" class="btn btn-outline-primary"><a href="${NamedRoutes.userPath(page.getGame().getUserId())}">К списку игр</a></button>
+                        <button type="button" class="btn btn-outline-primary"><a href="${NamedRoutes.statisticPath()}">Статистика игр</a></button>
                     </div>
                 </div>
             @else
             <h1>${page.getGame().getName()}</h1>
             <p>${page.getGame().getDescription()}: ${page.getQuestion()}</p>
-            <form action="/games/${page.getGame().getId()}" method="post" class="rss-form text-body">
+            <form action="${NamedRoutes.gamePath(page.getGame().getId())}" method="post" class="rss-form text-body">
                 <div class="row">
                     <div class="col">
                         <div class="form-floating">

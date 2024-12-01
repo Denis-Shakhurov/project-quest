@@ -1,4 +1,5 @@
 @import gg.jte.Content
+@import utils.NamedRoutes
 @param Content content
 
 <!doctype html>
@@ -15,8 +16,8 @@
     <div class="container-fluid " >
         <div class="collapse navbar-collapse" id="navbarNav">
             <div class="navbar-nav">
-                <a class="nav-link" href="/">Главная</a>
-                <a class="nav-link" href="/statistic">Статистика игр</a>
+                <a class="nav-link" href="${NamedRoutes.startPath()}">Главная</a>
+                <a class="nav-link" href="${NamedRoutes.statisticPath()}">Статистика игр</a>
             </div>
         </div>
     </div>
