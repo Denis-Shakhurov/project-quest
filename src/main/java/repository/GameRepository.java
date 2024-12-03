@@ -56,7 +56,7 @@ public class GameRepository extends BaseRepository {
     public static void update(Game game) throws SQLException {
         var sql = "UPDATE games SET win = ?, lose = ? WHERE id = ?";
         try (var conn = dataSource.getConnection();
-        var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, game.getCountWin());
             stmt.setInt(2, game.getCountLose());
             stmt.setLong(3, game.getId());
@@ -65,9 +65,10 @@ public class GameRepository extends BaseRepository {
     }
 
     public static List<Game> getAll() throws SQLException {
-        var sql = "SELECT name, user_id, SUM (win) AS count_win, SUM (lose) AS count_lose FROM games GROUP BY name, user_id";
+        var sql = "SELECT name, user_id, SUM (win) AS count_win, SUM (lose) AS count_lose "
+                + "FROM games GROUP BY name, user_id";
         try (var conn = dataSource.getConnection();
-        var stmt = conn.prepareStatement(sql)) {
+            var stmt = conn.prepareStatement(sql)) {
             var resultSet = stmt.executeQuery();
             List<Game> games = new ArrayList<>();
             while (resultSet.next()) {

@@ -1,7 +1,6 @@
 package controller;
 
 import dto.UserPage;
-import dto.UsersPage;
 import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
 import io.javalin.validation.ValidationException;

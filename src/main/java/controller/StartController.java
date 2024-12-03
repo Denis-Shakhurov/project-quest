@@ -1,6 +1,5 @@
 package controller;
 
-import dto.StartPage;
 import dto.UsersPage;
 import io.javalin.http.Context;
 import repository.UserRepository;
