@@ -107,4 +107,16 @@ public class AppTest {
             assertTrue(response.body().string().contains(game.getDescription()));
         });
     }
+
+    @Test
+    public void createUserSuccessTest() throws SQLException {
+        User userExpected = new User("TestUser");
+        UserRepository.save(userExpected);
+        JavalinTest.test(app, (server, client) -> {
+            client.post("/");
+
+            var userActual = UserRepository.findById(1L).get();
+            assertEquals(userExpected.getName(), userActual.getName());
+        });
+    }
 }

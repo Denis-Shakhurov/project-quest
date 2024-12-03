@@ -22,9 +22,9 @@ public class GameController {
         var userId = ctx.pathParamAsClass("id", Long.class).get();
         Game game = factoryGame.getGame(nameGame);
         game.setUserId(userId);
-        var idGame = GameRepository.save(game);
+        var gameId = GameRepository.save(game);
         ctx.status(201);
-        ctx.redirect("/games/" + idGame);
+        ctx.redirect("/games/" + gameId);
     }
 
     public static void show(Context ctx) throws SQLException {
