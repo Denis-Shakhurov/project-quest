@@ -39,5 +39,5 @@ jobs:
         CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
         JACOCO_SOURCE_PATH: app/src/main/java
       with:
-        coverageCommand: ./cc-test-reporter format-coverage -d
+        coverageCommand: mvn test
         coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml:jacoco
