@@ -38,12 +38,6 @@ jobs:
       env:
         CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
         JACOCO_SOURCE_PATH: app/src/main/java
-      #with:
+      with:
        # coverageCommand: make -C app report
-        #coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml:jacoco
-      script:
-        - mvn test
-      #  - sonar-scanner
-      after_script:
-        - ./cc-test-reporter format-coverage -d -t jacoco ${{github.workspace}}/target/site/jacoco/jacoco.xml:jacoco
-        - ./cc-test-reporter upload-coverage -d
+        coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml:jacoco
