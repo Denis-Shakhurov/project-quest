@@ -1,4 +1,9 @@
-# Веб приложение в котором можно поиграть в логические игры, посмотреть статистику игр.
+
+[![Maintainability](https://api.codeclimate.com/v1/badges/18738a0d4e790470b5a7/maintainability)](https://codeclimate.com/github/Denis-Shakhurov/project-quest/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/18738a0d4e790470b5a7/test_coverage)](https://codeclimate.com/github/Denis-Shakhurov/project-quest/test_coverage)
+
+# QuestGame
+### Веб приложение в котором можно поиграть в логические игры, посмотреть статистику игр.
 
 ---
 Установка:
