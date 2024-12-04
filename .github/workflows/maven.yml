@@ -28,8 +28,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-    - run: mvn jacoco:report
-    - run: mvn -B package --file pom.xml
+      run: mvn -B package --file pom.xml
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     #- name: Update dependency graph
@@ -39,6 +38,6 @@ jobs:
       env:
         CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
         JACOCO_SOURCE_PATH: app/src/main/java
-      #with:
-       # coverageCommand: mvn jacoco:report
-        #coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml:jacoco
+      with:
+        coverageCommand: mvn jacoco:report
+        coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml:jacoco
