@@ -28,7 +28,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn clean -B package --file pom.xml
 
     - name: Publish code coverage
       uses: paambaati/codeclimate-action@v9.0.0
