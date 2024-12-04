@@ -41,3 +41,4 @@ jobs:
       with:
         coverageCommand: mvn jacoco:report
         coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml:jacoco
+        debug: true
