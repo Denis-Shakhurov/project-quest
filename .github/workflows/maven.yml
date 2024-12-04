@@ -38,6 +38,9 @@ jobs:
       env:
         CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
         JACOCO_SOURCE_PATH: app/src/main/java
-      with:
-        coverageCommand: mvn jacoco:report
-        coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml --input-type jacoco
+      #with:
+       # coverageCommand: mvn jacoco:report
+        #coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml --input-type jacoco
+  after_script:
+    - JACOCO_SOURCE_PATH=jfluentvalidation-core/src/main/java ./cc-test-reporter format-coverage ./jfluentvalidation-core/target/site/jacoco/jacoco.xml -d -t jacoco
+    - ./cc-test-reporter upload-coverage
