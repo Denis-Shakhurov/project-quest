@@ -40,4 +40,4 @@ jobs:
         JACOCO_SOURCE_PATH: app/src/main/java
       with:
         coverageCommand: mvn jacoco:report
-        coverageLocations: jacoco ${{github.workspace}}/target/site/jacoco/jacoco.xml:jacoco
+        coverageLocations: cc-test-reporter format-coverage ${{github.workspace}}/target/site/jacoco/jacoco.xml -t
