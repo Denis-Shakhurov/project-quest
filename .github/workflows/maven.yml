@@ -31,10 +31,10 @@ jobs:
       run: mvn -B package --file pom.xml
 
     - name: Publish code coverage
-      uses: paambaati/codeclimate-action@v5.0.0
+      uses: paambaati/codeclimate-action@v9.0.0
       env:
         CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
-        JACOCO_SOURCE_PATH: "${{github.workspace}}/app/src/main/java"
+        JACOCO_SOURCE_PATH: ${{github.workspace}}/app/src/main/java
       with:
         coverageCommand: mvn jacoco:report
         coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml:jacoco
