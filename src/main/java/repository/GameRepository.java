@@ -30,7 +30,7 @@ public class GameRepository extends BaseRepository {
         return game.getId();
     }
 
-    public static Optional<Game> findByNId(Long id) throws SQLException {
+    public static Optional<Game> findById(Long id) throws SQLException {
         var sql = "SELECT * FROM games WHERE id = ?";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql)) {

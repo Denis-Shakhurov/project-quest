@@ -19,7 +19,7 @@ public class GameController {
     public static void create(Context ctx) throws SQLException {
         FactoryGame factoryGame = new FactoryGame();
         String nameGame = ctx.formParam("game");
-        var userId = ctx.pathParamAsClass("id", Long.class).get();
+        var userId = ctx.pathParamAsClass("id", Long.class).getOrDefault(null);
         Game game = factoryGame.getGame(nameGame);
         game.setUserId(userId);
         var gameId = GameRepository.save(game);
@@ -29,7 +29,7 @@ public class GameController {
 
     public static void show(Context ctx) throws SQLException {
         var id = ctx.pathParamAsClass("id", Long.class).get();
-        var game = GameRepository.findByNId(id)
+        var game = GameRepository.findById(id)
                 .orElseThrow(() -> new NotFoundResponse("Entity with id = " + id + " not found"));
 
         var page = new GamePage(game);
