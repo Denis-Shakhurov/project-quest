@@ -18,8 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class AppTest {
     Javalin app;
     private static MockWebServer mockBackEnd;
-    private final FactoryGame factoryGame = new FactoryGame();
-
 
     @BeforeAll
     static void setUpMock() throws IOException {
@@ -37,7 +35,6 @@ public class AppTest {
     static void tearDown() throws IOException {
         mockBackEnd.shutdown();
     }
-
 
     @BeforeEach
     public final void setUp() throws Exception {
@@ -63,5 +60,4 @@ public class AppTest {
             assertTrue(response.body().string().contains("Статистика игр"));
         });
     }
-
 }

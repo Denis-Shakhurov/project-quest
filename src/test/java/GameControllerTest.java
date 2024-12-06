@@ -26,7 +26,6 @@ public class GameControllerTest {
     private static MockWebServer mockBackEnd;
     private final FactoryGame factoryGame = new FactoryGame();
 
-
     @BeforeAll
     static void setUpMock() throws IOException {
         mockBackEnd = new MockWebServer();
@@ -43,7 +42,6 @@ public class GameControllerTest {
     static void tearDown() throws IOException {
         mockBackEnd.shutdown();
     }
-
 
     @BeforeEach
     public final void setUp() throws Exception {

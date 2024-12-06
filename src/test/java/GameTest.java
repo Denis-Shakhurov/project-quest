@@ -41,6 +41,6 @@ public class GameTest {
                 }
         );
 
-        assertEquals(exception.getMessage(), "Unexpected value: Game");
+        assertEquals("Unexpected value: Game", exception.getMessage());
     }
 }

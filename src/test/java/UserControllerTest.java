@@ -38,7 +38,6 @@ public class UserControllerTest {
         mockBackEnd.shutdown();
     }
 
-
     @BeforeEach
     public final void setUp() throws Exception {
         app = App.getApp();
