@@ -10,9 +10,6 @@ content = @`
                 <div class="row">
                     <div class="col-md-10 col-lg-8 mx-auto text-dark">
                         <h1 class="display-3 mb-0">Статистика игр</h1>
-                        @if(page.getGames().isEmpty())
-                            <p>Пока не сыграно ни в одну игру</p>
-                        @endif
                         <table class="table table-bordered table-hover mt-3">
                             <thead>
                             <tr>
@@ -22,16 +19,16 @@ content = @`
                                 <th scope="col">Количество побед</th>
                                 <th scope="col">Количество поражений</th>
                             </tr>
-                        </thead>
-                            @for(var user : page.getUsers())
-                                @for(var game : page.getGames().stream().filter(g -> g.getUserId().equals(user.getId())).toList())
+                            </thead>
+                            @for(var map : page.getUsersWithGames())
+                                @for(var userName : map.keySet())
                                     <tbody>
                                     <tr>
-                                        <th scope="row">${user.getId()}</th>
-                                        <td><a href="${NamedRoutes.userPath(user.getId())}">${user.getName()}</a></td>
-                                        <th scope="row">${game.getName()}</th>
-                                        <th scope="row">${game.getCountWin()}</th>
-                                        <th scope="row">${game.getCountLose()}</th>
+                                        <th scope="row">${map.get(userName).getUserId()}</th>
+                                        <td><a href="${NamedRoutes.userPath(map.get(userName).getUserId())}">${userName}</a></td>
+                                        <th scope="row">${map.get(userName).getName()}</th>
+                                        <th scope="row">${map.get(userName).getCountWin()}</th>
+                                        <th scope="row">${map.get(userName).getCountLose()}</th>
                                     </tr>
                                     </tbody>
                                 @endfor

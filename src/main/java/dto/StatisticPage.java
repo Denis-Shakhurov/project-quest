@@ -4,21 +4,16 @@ import model.User;
 import model.game.Game;
 
 import java.util.List;
+import java.util.Map;
 
 public class StatisticPage {
-    private List<Game> games;
-    private List<User> users;
+    private List<Map<String, Game>> usersWithGames;
 
-    public StatisticPage(List<Game> games, List<User> users) {
-        this.games = games;
-        this.users = users;
+    public StatisticPage(List<Map<String, Game>> usersWithGames) {
+        this.usersWithGames = usersWithGames;
     }
 
-    public List<Game> getGames() {
-        return games;
-    }
-
-    public List<User> getUsers() {
-        return users;
+    public List<Map<String, Game>> getUsersWithGames() {
+        return usersWithGames;
     }
 }

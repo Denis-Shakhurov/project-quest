@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class GameRepository extends BaseRepository {
@@ -84,6 +85,35 @@ public class GameRepository extends BaseRepository {
                 game.setCountLose(countLose);
 
                 games.add(game);
+            }
+            return games;
+        }
+    }
+
+    public static List<Map<String, Game>> getAllUserNameWithGames() throws SQLException {
+        var sql = "SELECT u.name, g.name, g.user_id, SUM (g.win) AS count_win, SUM (g.lose) AS count_lose "
+                + "FROM games AS g "
+                + "INNER JOIN users AS u "
+                + "ON g.user_id = u.id "
+                + "GROUP BY u.name, g.user_id, g.name";
+        try (var conn = dataSource.getConnection();
+             var stmt = conn.prepareStatement(sql)) {
+            var resultSet = stmt.executeQuery();
+            List<Map<String,Game>> games = new ArrayList<>();
+            while (resultSet.next()) {
+                String userName = resultSet.getString("users.name");
+                String gameName = resultSet.getString("games.name");
+                Long userId = resultSet.getLong("user_id");
+                int countWin = resultSet.getInt("count_win");
+                int countLose = resultSet.getInt("count_lose");
+
+                FactoryGame factoryGame = new FactoryGame();
+                Game game = factoryGame.getGame(gameName);
+                game.setUserId(userId);
+                game.setCountWin(countWin);
+                game.setCountLose(countLose);
+
+                games.add(Map.of(userName, game));
             }
             return games;
         }

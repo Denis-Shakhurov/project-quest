@@ -48,7 +48,6 @@ public class GameController {
             page.setQuestion(question);
         }
 
-
         if (answers.size() > 1) {
             var answer = answers.poll();
             var currentAnswer = answers.poll();
