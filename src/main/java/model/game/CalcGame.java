@@ -9,7 +9,7 @@ public class CalcGame extends Game {
 
     @Override
     public String getDescription() {
-        return "Дать верный ответ для математичнской операции";
+        return "Введи верный ответ для математичнской операции";
     }
 
     @Override

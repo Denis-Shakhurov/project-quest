@@ -26,7 +26,7 @@ content = @`
                                     <div class="form-floating">
                                         <input id="name-input" autofocus="" type="text" required="" name="name" aria-label="name"
                                                class="form-control w-80" placeholder="введи имя" autocomplete="off">
-                                        <label for="name-input">Введи имя</label>
+                                        <label for="name-input">Введи имя, не менее 4 символов</label>
                                     </div>
                                 </div>
                                 <div class="col">

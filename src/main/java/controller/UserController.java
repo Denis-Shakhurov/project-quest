@@ -24,24 +24,34 @@ public class UserController {
 
     public static void create(Context ctx) throws SQLException {
         String name = ctx.formParam("name");
-        try {
-            ctx.formParamAsClass("name", String.class)
-                    .check(value -> {
-                        try {
-                            return UserRepository.findByName(name);
-                        } catch (SQLException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }, "Игрок уже существует").get();
-            var user = new User(name);
-            var id = UserRepository.save(user);
-            ctx.sessionAttribute("flash", "Игрок создан");
-            ctx.status(201);
-            ctx.redirect("/users/" + id);
-        } catch (ValidationException e) {
-            ctx.sessionAttribute("flash", "Игрок уже существует");
+        if (isValidName(name) && name.length() >= 4) {
+            try {
+                ctx.formParamAsClass("name", String.class)
+                        .check(value -> {
+                            try {
+                                return UserRepository.findByName(name);
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }, "Игрок уже существует").get();
+                var user = new User(name);
+                var id = UserRepository.save(user);
+                ctx.sessionAttribute("flash", "Игрок создан");
+                ctx.status(201);
+                ctx.redirect("/users/" + id);
+            } catch (ValidationException e) {
+                ctx.sessionAttribute("flash", "Игрок уже существует");
+                ctx.status(422);
+                ctx.redirect("/");
+            }
+        } else {
+            ctx.sessionAttribute("flash", "Неккоректное имя");
             ctx.status(422);
             ctx.redirect("/");
         }
+    }
+
+    private static boolean isValidName(String name) {
+        return name.matches("\\w+");
     }
 }

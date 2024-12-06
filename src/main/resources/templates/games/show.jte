@@ -34,8 +34,8 @@ content = @`
                     </div>
                 </div>
             @else
-            <h1>${page.getGame().getName()}</h1>
-            <p>${page.getGame().getDescription()}: ${page.getQuestion()}</p>
+            <h1>"${page.getGame().getName()}"</h1>
+                <p>${page.getGame().getDescription()}: <b>${page.getQuestion()}</b></p>
             <form action="${NamedRoutes.gamePath(page.getGame().getId())}" method="post" class="rss-form text-body">
                 <div class="row">
                     <div class="col">
