@@ -24,7 +24,7 @@ public class UserController {
 
     public static void create(Context ctx) throws SQLException {
         String name = ctx.formParam("name");
-        if (isValidName(name) && name.length() >= 4) {
+        if (name != null && isValidName(name)) {
             try {
                 ctx.formParamAsClass("name", String.class)
                         .check(value -> {
@@ -52,6 +52,6 @@ public class UserController {
     }
 
     private static boolean isValidName(String name) {
-        return name.matches("\\w+");
+        return name.matches("\\w+") && name.length() >= 4;
     }
 }

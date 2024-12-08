@@ -13,7 +13,7 @@ import java.util.ArrayDeque;
 import static io.javalin.rendering.template.TemplateUtil.model;
 
 public class GameController {
-    private static ArrayDeque<String> answers = new ArrayDeque<>();
+    private static final ArrayDeque<String> answers = new ArrayDeque<>();
     private static int count = 0;
 
     public static void create(Context ctx) throws SQLException {
