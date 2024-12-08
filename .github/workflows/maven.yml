@@ -37,4 +37,4 @@ jobs:
         JACOCO_SOURCE_PATH: ${{github.workspace}}/target/site/jacoco
       with:
         coverageCommand: mvn jacoco:report
-        coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml:jacoco
+        coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml --input-type string
