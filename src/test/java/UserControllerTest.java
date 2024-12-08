@@ -1,4 +1,6 @@
+import controller.UserController;
 import io.javalin.Javalin;
+import io.javalin.http.Context;
 import io.javalin.testtools.JavalinTest;
 import model.User;
 import okhttp3.mockwebserver.MockResponse;
@@ -7,6 +9,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import repository.UserRepository;
 
 import java.io.IOException;
@@ -16,10 +21,14 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class UserControllerTest {
     Javalin app;
     private static MockWebServer mockBackEnd;
+    private static Context ctx;
 
     @BeforeAll
     static void setUpMock() throws IOException {
@@ -41,6 +50,7 @@ public class UserControllerTest {
     @BeforeEach
     public final void setUp() throws Exception {
         app = App.getApp();
+        ctx = mock(Context.class);
     }
 
     @Test
@@ -75,5 +85,29 @@ public class UserControllerTest {
             var userActual = UserRepository.findById(id).get();
             assertEquals(userExpected.getName(), userActual.getName());
         });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"  ", "ser"})
+    public void createUserWithWrongName(String  name) throws SQLException {
+        when(ctx.formParam("name")).thenReturn(name);
+
+        UserController.create(ctx);
+
+        verify(ctx).status(422);
+        verify(ctx).sessionAttribute("flash", "Неккоректное имя");
+        verify(ctx).redirect("/");
+    }
+
+    @ParameterizedTest
+    @NullSource
+    public void createUserWithNullName(String  name) throws SQLException {
+        when(ctx.formParam("name")).thenReturn(name);
+
+        UserController.create(ctx);
+
+        verify(ctx).status(422);
+        verify(ctx).sessionAttribute("flash", "Неккоректное имя");
+        verify(ctx).redirect("/");
     }
 }
