@@ -6,6 +6,7 @@ import io.javalin.http.NotFoundResponse;
 import io.javalin.validation.ValidationException;
 import model.User;
 import repository.UserRepository;
+import utils.NamedRoutes;
 
 import java.sql.SQLException;
 
@@ -38,20 +39,20 @@ public class UserController {
                 var id = UserRepository.save(user);
                 ctx.sessionAttribute("flash", "Игрок создан");
                 ctx.status(201);
-                ctx.redirect("/users/" + id);
+                ctx.redirect(NamedRoutes.userPath(id));
             } catch (ValidationException e) {
                 ctx.sessionAttribute("flash", "Игрок уже существует");
                 ctx.status(422);
-                ctx.redirect("/");
+                ctx.redirect(NamedRoutes.startPath());
             }
         } else {
             ctx.sessionAttribute("flash", "Неккоректное имя");
             ctx.status(422);
-            ctx.redirect("/");
+            ctx.redirect(NamedRoutes.startPath());
         }
     }
 
     private static boolean isValidName(String name) {
-        return name.matches("\\w+") && name.length() >= 4;
+        return name.matches("(\\w+|[а-яА-Я0-9]+)") && name.length() >= 4;
     }
 }

@@ -6,6 +6,7 @@ import io.javalin.http.NotFoundResponse;
 import model.FactoryGame;
 import model.game.Game;
 import repository.GameRepository;
+import utils.NamedRoutes;
 
 import java.sql.SQLException;
 import java.util.ArrayDeque;
@@ -24,7 +25,7 @@ public class GameController {
         game.setUserId(userId);
         var gameId = GameRepository.save(game);
         ctx.status(201);
-        ctx.redirect("/games/" + gameId);
+        ctx.redirect(NamedRoutes.gamePath(gameId));
     }
 
     public static void show(Context ctx) throws SQLException {
