@@ -35,6 +35,7 @@ content = @`
                             </div>
                         </form>
                         <div>
+                            @if(!page.getUsers().isEmpty())
                             <table class="table table-bordered table-hover mt-3">
                                 <thead>
                                 <tr>
@@ -51,6 +52,7 @@ content = @`
                                     </tbody>
                                 @endfor
                             </table>
+                            @endif
                         </div>
                     </div>
                 </div>

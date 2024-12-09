@@ -10,7 +10,10 @@ content = @`
                 <div class="row">
                     <div class="col-md-10 col-lg-8 mx-auto text-dark">
                         <h1 class="display-3 mb-0">Статистика игр</h1>
-                        <table class="table table-bordered table-hover mt-3">
+                        @if (page.getUsersWithGames().isEmpty())
+                            <p>Ни одна из игр ещё не сыграна.</p>
+                        @else
+                            <table class="table table-bordered table-hover mt-3">
                             <thead>
                             <tr>
                                 <th scope="col">id</th>
@@ -34,6 +37,7 @@ content = @`
                                 @endfor
                             @endfor
                         </table>
+                        @endif
                     </div>
                 </div>
             </div>
