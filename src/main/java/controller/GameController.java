@@ -2,6 +2,7 @@ package controller;
 
 import dto.GamePage;
 import io.javalin.http.Context;
+import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import model.FactoryGame;
 import model.game.Game;
@@ -24,7 +25,7 @@ public class GameController {
         Game game = factoryGame.getGame(nameGame);
         game.setUserId(userId);
         var gameId = GameRepository.save(game);
-        ctx.status(201);
+        ctx.status(HttpStatus.CREATED);
         ctx.redirect(NamedRoutes.gamePath(gameId));
     }
 
@@ -68,6 +69,6 @@ public class GameController {
 
         GameRepository.update(game);
         page.setFlash(ctx.consumeSessionAttribute("flash"));
-        ctx.render("games/show.jte", model("page", page)).status(200);
+        ctx.render("games/show.jte", model("page", page)).status(HttpStatus.OK);
     }
 }

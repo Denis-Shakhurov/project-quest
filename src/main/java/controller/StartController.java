@@ -1,5 +1,6 @@
 package controller;
 
+import dto.BasePage;
 import dto.UsersPage;
 import io.javalin.http.Context;
 import repository.UserRepository;
@@ -14,6 +15,8 @@ public class StartController {
         var users = UserRepository.getAll();
         var page = new UsersPage(users);
         page.setFlash(ctx.consumeSessionAttribute("flash"));
+        var login = ctx.cookie("jwt");
+        BasePage.setLogin(login.equals("") || login == null ? false : true);
         ctx.render("index.jte", model("page", page));
     }
 }

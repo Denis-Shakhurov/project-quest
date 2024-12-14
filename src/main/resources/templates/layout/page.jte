@@ -1,3 +1,4 @@
+@import dto.BasePage
 @import gg.jte.Content
 @import utils.NamedRoutes
 @param Content content
@@ -18,6 +19,12 @@
             <div class="navbar-nav">
                 <a class="nav-link" href="${NamedRoutes.startPath()}">Главная</a>
                 <a class="nav-link" href="${NamedRoutes.statisticPath()}">Статистика игр</a>
+                @if(!BasePage.isLogin())
+                    <a class="nav-link" href="/registration">Регистрация</a>
+                    <a class="nav-link" href="/login">Войти</a>
+                @else
+                    <a class="nav-link" href="/logout">Выйти</a>
+                @endif
             </div>
         </div>
     </div>

@@ -1,9 +1,15 @@
 package controller;
 
+import com.lambdaworks.crypto.SCryptUtil;
+import config.Provider;
+import config.javalinjwt.JWTProvider;
 import dto.UserPage;
 import io.javalin.http.Context;
+import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import io.javalin.validation.ValidationException;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
 import model.User;
 import repository.UserRepository;
 import utils.NamedRoutes;
@@ -13,6 +19,7 @@ import java.sql.SQLException;
 import static io.javalin.rendering.template.TemplateUtil.model;
 
 public class UserController {
+    private static final JWTProvider<User> provider = Provider.create();
 
     public static void show(Context ctx) throws SQLException {
         var id = ctx.pathParamAsClass("id", Long.class).get();
@@ -20,12 +27,15 @@ public class UserController {
                 .orElseThrow(() -> new NotFoundResponse("Entity with id = " + id + " not found"));
         var page = new UserPage(user);
         page.setFlash(ctx.consumeSessionAttribute("flash"));
+        ctx.status(HttpStatus.OK);
         ctx.render("users/show.jte", model("page", page));
     }
 
     public static void create(Context ctx) throws SQLException {
-        String name = ctx.formParam("name");
-        if (name != null && isValidName(name)) {
+        var name = ctx.formParam("name");
+        var email = ctx.formParam("email");
+        var password = ctx.formParam("password");
+        if (isValidName(name) && isValidEmail(email) && isValidPassword(password)) {
             try {
                 ctx.formParamAsClass("name", String.class)
                         .check(value -> {
@@ -34,25 +44,87 @@ public class UserController {
                             } catch (SQLException e) {
                                 throw new RuntimeException(e);
                             }
-                        }, "Игрок уже существует").get();
-                var user = new User(name);
-                var id = UserRepository.save(user);
+                        }, "Игрок с таким" + name + "уже существует").get();
+                /*ctx.pathParamAsClass("email", String.class)
+                        .check(value -> {
+                            try {
+                                return UserRepository.findByEmail(email).get() != null;
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }, "Игрок с таким" + email + "уже существует").get();*/
+                var passwordHash = SCryptUtil.scrypt(password, 2, 2, 2);
+                var user = new User(name, email, passwordHash, "user");
+                UserRepository.save(user);
+
+                var token = provider.generateToken(user);
+                ctx.cookie("jwt", token);
+
+                ctx.sessionAttribute("login", "ok");
                 ctx.sessionAttribute("flash", "Игрок создан");
-                ctx.status(201);
-                ctx.redirect(NamedRoutes.userPath(id));
+                ctx.status(HttpStatus.CREATED);
+                ctx.redirect(NamedRoutes.startPath());
             } catch (ValidationException e) {
                 ctx.sessionAttribute("flash", "Игрок уже существует");
-                ctx.status(422);
+                ctx.status(HttpStatus.BAD_REQUEST);
                 ctx.redirect(NamedRoutes.startPath());
             }
         } else {
-            ctx.sessionAttribute("flash", "Неккоректное имя");
-            ctx.status(422);
+            ctx.sessionAttribute("flash", "Неккоректные данные");
+            ctx.status(HttpStatus.BAD_REQUEST);
             ctx.redirect(NamedRoutes.startPath());
         }
     }
 
+    public static void login(Context ctx) {
+        try {
+            var email = ctx.formParam("email");
+            var password = ctx.formParam("password");
+            var user = UserRepository.findByEmail(email)
+                    .orElseThrow(() -> new NotFoundResponse("User with " + email + " not found"));
+            if (user.getPassword() != null && SCryptUtil.check(password, user.getPassword())) {
+
+                var token = provider.generateToken(user);
+                ctx.cookie("jwt", token);
+                ctx.sessionAttribute("flash", "Привет " + user.getName() + " !");
+                ctx.status(HttpStatus.OK);
+                ctx.redirect(NamedRoutes.startPath());
+            } else if (user.getEmail() == null) {
+                ctx.sessionAttribute("flash", "Игрок с email - \"" + ctx.formParam("email") + "\" не существует");
+                ctx.status(422);
+                ctx.redirect("/login");
+            } else {
+                ctx.status(422);
+                ctx.sessionAttribute("flash", "Некорректные логин или пароль");
+                ctx.redirect("/login");
+            }
+        } catch (SQLException | NotFoundResponse e) {
+            ctx.status(422);
+            ctx.redirect("/login");
+        }
+    }
+
+    public static void logout(Context ctx) {
+        ctx.sessionAttribute("flash", null);
+        ctx.cookie("jwt", "");
+        ctx.redirect(NamedRoutes.startPath());
+    }
+
     private static boolean isValidName(String name) {
-        return name.matches("(\\w+|[а-яА-Я0-9]+)") && name.length() >= 4;
+        return name != null && name.matches("(\\w+|[а-яА-Я0-9]+)") && name.length() >= 4;
+    }
+
+    private static boolean isValidEmail(String email) {
+        try {
+            InternetAddress emailAddress = new InternetAddress(email);
+            emailAddress.validate();
+            return true;
+        } catch (AddressException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static boolean isValidPassword(String password) {
+        return password != null && password.length() > 5;
     }
 }

@@ -11,10 +11,13 @@ import java.util.Optional;
 public class UserRepository extends BaseRepository {
 
     public static Long save(User user) throws SQLException {
-        var sql = "INSERT INTO users (name) VALUES (?)";
+        var sql = "INSERT INTO users (name, email, password, level_status) VALUES (?, ?, ?, ?)";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, user.getName());
+            stmt.setString(2, user.getEmail());
+            stmt.setString(3, user.getPassword());
+            stmt.setString(4, user.getLevel());
             stmt.executeUpdate();
             var generatedKey = stmt.getGeneratedKeys();
             if (generatedKey.next()) {
@@ -33,9 +36,12 @@ public class UserRepository extends BaseRepository {
             var resultSet = stmt.executeQuery();
             List<User> users = new ArrayList<>();
             while (resultSet.next()) {
-                var name = resultSet.getString("name");
                 var id = resultSet.getLong("id");
-                var user = new User(name);
+                var name = resultSet.getString("name");
+                var email = resultSet.getString("email");
+                var password = resultSet.getString("password");
+                var level = resultSet.getString("level_status");
+                var user = new User(name, email, password, level);
                 user.setId(id);
                 users.add(user);
             }
@@ -51,7 +57,10 @@ public class UserRepository extends BaseRepository {
             var resultSet = stmt.executeQuery();
             if (resultSet.next()) {
                 var name = resultSet.getString("name");
-                var user = new User(name);
+                var email = resultSet.getString("email");
+                var password = resultSet.getString("password");
+                var level = resultSet.getString("level_status");
+                var user = new User(name, email, password, level);
                 user.setId(id);
                 return Optional.of(user);
             }
@@ -67,13 +76,39 @@ public class UserRepository extends BaseRepository {
             var resultSet = stmt.executeQuery();
             List<User> users = new ArrayList<>();
             if (resultSet.next()) {
-                var name = resultSet.getString("name");
                 var id = resultSet.getLong("id");
-                var user = new User(name);
+                var name = resultSet.getString("name");
+                var email = resultSet.getString("email");
+                var password = resultSet.getString("password");
+                var level = resultSet.getString("level_status");
+                var user = new User(name, email, password, level);
                 user.setId(id);
                 users.add(user);
             }
             return users.isEmpty();
         }
+    }
+
+    public static Optional<User> findByEmail(String str) throws SQLException {
+        var sql = "SELECT * FROM users WHERE email = ?";
+        var user = new User();
+        try (var conn = dataSource.getConnection();
+             var stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, str);
+            var resultSet = stmt.executeQuery();
+            if (resultSet.next()) {
+                var id = resultSet.getLong("id");
+                var name = resultSet.getString("name");
+                var email = resultSet.getString("email");
+                var password = resultSet.getString("password");
+                var level = resultSet.getString("level_status");
+                user.setName(name);
+                user.setEmail(email);
+                user.setPassword(password);
+                user.setLevel(level);
+                user.setId(id);
+            }
+        }
+        return Optional.of(user);
     }
 }
