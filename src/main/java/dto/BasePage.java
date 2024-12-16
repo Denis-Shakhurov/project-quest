@@ -1,12 +1,16 @@
 package dto;
 
-import io.javalin.http.Context;
+import model.User;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BasePage {
     private String flash;
     private String statusAnswer;
     private String question;
     private static boolean login;
+    private static Map<String, String> userInfo = new HashMap<>();
 
     public String getFlash() {
         return flash;
@@ -38,5 +42,13 @@ public class BasePage {
 
     public static void setLogin(boolean login) {
         BasePage.login = login;
+    }
+
+    public static Map<String, String> getUserInfo() {
+        return userInfo;
+    }
+
+    public static void setUserInfo(Map<String, String> userInfo) {
+        BasePage.userInfo = userInfo;
     }
 }

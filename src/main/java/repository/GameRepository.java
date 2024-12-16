@@ -65,11 +65,13 @@ public class GameRepository extends BaseRepository {
         }
     }
 
-    public static List<Game> getAll() throws SQLException {
+    public static List<Game> getAllGameForUser(Long id) throws SQLException {
         var sql = "SELECT name, user_id, SUM (win) AS count_win, SUM (lose) AS count_lose "
-                + "FROM games GROUP BY name, user_id";
+                + "FROM games WHERE user_id = ? "
+                + "GROUP BY name, user_id";
         try (var conn = dataSource.getConnection();
             var stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
             var resultSet = stmt.executeQuery();
             List<Game> games = new ArrayList<>();
             while (resultSet.next()) {
@@ -87,6 +89,15 @@ public class GameRepository extends BaseRepository {
                 games.add(game);
             }
             return games;
+        }
+    }
+
+    public static void deleteAllGameForUser(Long id) throws SQLException {
+        var sql = "DELETE FROM games WHERE user_id = ?";
+        try (var conn = dataSource.getConnection();
+            var stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            stmt.executeUpdate();
         }
     }
 

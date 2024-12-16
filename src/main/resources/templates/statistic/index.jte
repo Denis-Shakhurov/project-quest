@@ -1,5 +1,4 @@
 @import dto.StatisticPage
-@import utils.NamedRoutes
 @param StatisticPage page
 
 @template.layout.page(
@@ -28,7 +27,7 @@ content = @`
                                     <tbody>
                                     <tr>
                                         <th scope="row">${map.get(userName).getUserId()}</th>
-                                        <td><a href="${NamedRoutes.userPath(map.get(userName).getUserId())}">${userName}</a></td>
+                                        <th scope="row">${userName}</th>
                                         <th scope="row">${map.get(userName).getName()}</th>
                                         <th scope="row">${map.get(userName).getCountWin()}</th>
                                         <th scope="row">${map.get(userName).getCountLose()}</th>

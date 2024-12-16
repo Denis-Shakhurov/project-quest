@@ -13,15 +13,19 @@ content = @`
                 <table class="table table-bordered table-hover mt-3">
                     <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Имя</th>
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Level</th>
                     </tr>
                     </thead>
                     @for(var user : page.getUsers())
                         <tbody>
                         <tr>
-                            <th scope="row">${page.getUsers().indexOf(user) + 1}</th>
+                            <th scope="row">${user.getId()}</th>
                             <td><a href="${NamedRoutes.userPath(user.getId())}">${user.getName()}</a></td>
+                            <th scope="row">${user.getEmail()}</th>
+                            <th scope="row">${user.getLevel()}</th>
                         </tr>
                         </tbody>
                     @endfor

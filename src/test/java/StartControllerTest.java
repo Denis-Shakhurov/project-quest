@@ -39,7 +39,7 @@ public class StartControllerTest {
 
             verify(ctx).render(templateCaptor.capture(), modelCaptor.capture());
 
-            assertEquals("index.jte", templateCaptor.getValue());
+            assertEquals("start.jte", templateCaptor.getValue());
             UsersPage capturedPage = (UsersPage) modelCaptor.getValue().get("page");
             assertEquals(users, capturedPage.getUsers());
         }

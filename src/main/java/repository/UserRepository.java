@@ -68,14 +68,14 @@ public class UserRepository extends BaseRepository {
         return Optional.empty();
     }
 
-    public static boolean findByName(String str) throws SQLException {
-        var sql = "SELECT * FROM users WHERE name = ?";
+    public static boolean existByEmail(String str) throws SQLException {
+        var sql = "SELECT * FROM users WHERE email = ?";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, str);
             var resultSet = stmt.executeQuery();
             List<User> users = new ArrayList<>();
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 var id = resultSet.getLong("id");
                 var name = resultSet.getString("name");
                 var email = resultSet.getString("email");
@@ -110,5 +110,14 @@ public class UserRepository extends BaseRepository {
             }
         }
         return Optional.of(user);
+    }
+
+    public static void delete(Long id) throws SQLException {
+        var sql = "DELETE FROM users WHERE user_id = ?";
+        try (var conn = dataSource.getConnection();
+             var stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            stmt.executeUpdate();
+        }
     }
 }

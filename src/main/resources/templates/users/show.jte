@@ -7,16 +7,30 @@ content = @`
     <main class="flax-grow-1">
     <section>
         <div class="container-lg mt-5">
-            <h1>${page.getUser().getName()}, выбери игру.</h1>
-            <form action="${NamedRoutes.userPath(page.getUser().getId())}" method="post" name="CalcGame" class="rss-form text-body">
-                <div class="row">
-                    <div class="col">
-                        <button type="submit" name="game" value="CalcGame" class="h-100 btn btn-lg btn-primary px-sm-3">CalcGame</button>
-                        <button type="submit" name="game" value="EvenGame" class="h-100 btn btn-lg btn-primary px-sm-3">EvenGame</button>
-                        <button type="submit" name="game" value="ProgressionGame" class="h-100 btn btn-lg btn-primary px-sm-3">ProgressionGame</button>
-                    </div>
-                </div>
-            </form>
+            <h1>${page.getUser().getName()}</h1>
+            <p>Статистика твоих игр</p>
+            @if (page.getGames().isEmpty())
+                <p>Ни одна из игр ещё не сыграна.</p>
+            @else
+                <table class="table table-bordered table-hover mt-3">
+                    <thead>
+                    <tr>
+                        <th scope="col">Название игры</th>
+                        <th scope="col">Количество побед</th>
+                        <th scope="col">Количество поражений</th>
+                    </tr>
+                    </thead>
+                    @for(var game : page.getGames())
+                        <tbody>
+                        <tr>
+                            <th scope="row">${game.getName()}</th>
+                            <th scope="row">${game.getCountWin()}</th>
+                            <th scope="row">${game.getCountLose()}</th>
+                        </tr>
+                        </tbody>
+                    @endfor
+                </table>
+            @endif
         </div>
     </section>
     </main>

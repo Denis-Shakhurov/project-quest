@@ -11,7 +11,7 @@ content = @`
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-    <section>
+    <section class="py-4 py-xl-5">
         <div class="container-lg mt-5">
             @if (page.getStatusAnswer() != null && page.getStatusAnswer().equals("End game"))
                 <div class="alert alert-success w-25 p-3 position-absolute top-50 start-50 translate-middle" role="alert">
@@ -19,7 +19,6 @@ content = @`
                     <hr>
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-outline-primary"><a href="${NamedRoutes.startPath()}">На главную</a></button>
-                        <button type="button" class="btn btn-outline-primary"><a href="${NamedRoutes.userPath(page.getGame().getUserId())}">К списку игр</a></button>
                         <button type="button" class="btn btn-outline-primary"><a href="${NamedRoutes.statisticPath()}">Статистика игр</a></button>
                     </div>
                 </div>
@@ -29,7 +28,6 @@ content = @`
                     <hr>
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-outline-primary"><a href="${NamedRoutes.startPath()}">На главную</a></button>
-                        <button type="button" class="btn btn-outline-primary"><a href="${NamedRoutes.userPath(page.getGame().getUserId())}">К списку игр</a></button>
                         <button type="button" class="btn btn-outline-primary"><a href="${NamedRoutes.statisticPath()}">Статистика игр</a></button>
                     </div>
                 </div>

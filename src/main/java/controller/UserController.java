@@ -4,6 +4,7 @@ import com.lambdaworks.crypto.SCryptUtil;
 import config.Provider;
 import config.javalinjwt.JWTProvider;
 import dto.UserPage;
+import dto.UsersPage;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
@@ -11,6 +12,7 @@ import io.javalin.validation.ValidationException;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import model.User;
+import repository.GameRepository;
 import repository.UserRepository;
 import utils.NamedRoutes;
 
@@ -21,11 +23,19 @@ import static io.javalin.rendering.template.TemplateUtil.model;
 public class UserController {
     private static final JWTProvider<User> provider = Provider.create();
 
+    public static void index(Context ctx) throws SQLException {
+        var users = UserRepository.getAll();
+        var page = new UsersPage(users);
+        ctx.status(HttpStatus.OK);
+        ctx.render("users/index.jte", model("page", page));
+    }
+
     public static void show(Context ctx) throws SQLException {
         var id = ctx.pathParamAsClass("id", Long.class).get();
         var user = UserRepository.findById(id)
                 .orElseThrow(() -> new NotFoundResponse("Entity with id = " + id + " not found"));
-        var page = new UserPage(user);
+        var games = GameRepository.getAllGameForUser(id);
+        var page = new UserPage(user, games);
         page.setFlash(ctx.consumeSessionAttribute("flash"));
         ctx.status(HttpStatus.OK);
         ctx.render("users/show.jte", model("page", page));
@@ -35,44 +45,37 @@ public class UserController {
         var name = ctx.formParam("name");
         var email = ctx.formParam("email");
         var password = ctx.formParam("password");
+        var level = ctx.formParamAsClass("level", String.class).getOrDefault("user");
         if (isValidName(name) && isValidEmail(email) && isValidPassword(password)) {
             try {
-                ctx.formParamAsClass("name", String.class)
+                ctx.formParamAsClass("email", String.class)
                         .check(value -> {
                             try {
-                                return UserRepository.findByName(name);
+                                return UserRepository.existByEmail(email);
                             } catch (SQLException e) {
                                 throw new RuntimeException(e);
                             }
-                        }, "Игрок с таким" + name + "уже существует").get();
-                /*ctx.pathParamAsClass("email", String.class)
-                        .check(value -> {
-                            try {
-                                return UserRepository.findByEmail(email).get() != null;
-                            } catch (SQLException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }, "Игрок с таким" + email + "уже существует").get();*/
+                        }, "Игрок с таким " + email + " уже существует").get();
                 var passwordHash = SCryptUtil.scrypt(password, 2, 2, 2);
-                var user = new User(name, email, passwordHash, "user");
-                UserRepository.save(user);
+                var user = new User(name, email, passwordHash, level);
+                var id = UserRepository.save(user);
 
                 var token = provider.generateToken(user);
                 ctx.cookie("jwt", token);
 
-                ctx.sessionAttribute("login", "ok");
+                ctx.cookie("userId", String.valueOf(id));
                 ctx.sessionAttribute("flash", "Игрок создан");
                 ctx.status(HttpStatus.CREATED);
                 ctx.redirect(NamedRoutes.startPath());
             } catch (ValidationException e) {
-                ctx.sessionAttribute("flash", "Игрок уже существует");
+                ctx.sessionAttribute("flash", "Игрок с таким " + email + " уже существует");
                 ctx.status(HttpStatus.BAD_REQUEST);
-                ctx.redirect(NamedRoutes.startPath());
+                ctx.redirect("/registration");
             }
         } else {
             ctx.sessionAttribute("flash", "Неккоректные данные");
             ctx.status(HttpStatus.BAD_REQUEST);
-            ctx.redirect(NamedRoutes.startPath());
+            ctx.redirect("/registration");
         }
     }
 
@@ -86,6 +89,7 @@ public class UserController {
 
                 var token = provider.generateToken(user);
                 ctx.cookie("jwt", token);
+                ctx.cookie("userId", String.valueOf(user.getId()));
                 ctx.sessionAttribute("flash", "Привет " + user.getName() + " !");
                 ctx.status(HttpStatus.OK);
                 ctx.redirect(NamedRoutes.startPath());
@@ -107,7 +111,16 @@ public class UserController {
     public static void logout(Context ctx) {
         ctx.sessionAttribute("flash", null);
         ctx.cookie("jwt", "");
+        ctx.cookie("userId", "");
         ctx.redirect(NamedRoutes.startPath());
+    }
+
+    public static void destroy(Context ctx) throws SQLException {
+        var id = ctx.pathParamAsClass("id", Long.class).get();
+        GameRepository.deleteAllGameForUser(id);
+        UserRepository.delete(id);
+        ctx.status(HttpStatus.OK);
+        ctx.redirect(NamedRoutes.userPath(id));
     }
 
     private static boolean isValidName(String name) {

@@ -1,3 +1,4 @@
+import com.lambdaworks.crypto.SCryptUtil;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import config.Provider;
@@ -15,6 +16,7 @@ import config.javalinjwt.JavalinJWT;
 import model.Roles;
 import model.User;
 import repository.BaseRepository;
+import repository.UserRepository;
 import utils.NamedRoutes;
 
 import java.io.BufferedReader;
@@ -57,6 +59,9 @@ public class App {
             config.bundledPlugins.enableDevLogging();
         });
 
+        // add "admin" pre run app
+        UserRepository.save(new User("Admin", "admin@mail.com", SCryptUtil.scrypt("password", 2, 2, 2), "admin"));
+
         // create the provider
         JWTProvider<User> provider = Provider.create();
 
@@ -80,12 +85,13 @@ public class App {
         app.get(NamedRoutes.userPath("{id}"), UserController::show, Roles.USER, Roles.ADMIN);
         app.get(NamedRoutes.gamePath("{id}"), GameController::show, Roles.USER, Roles.ADMIN);
         app.post(NamedRoutes.gamePath("{id}"), GameController::show, Roles.USER, Roles.ADMIN);
-        app.get(NamedRoutes.statisticPath(), StatisticController::index, Roles.USER, Roles.ADMIN);
+        app.get(NamedRoutes.statisticPath(), StatisticController::index, Roles.GUEST, Roles.USER, Roles.ADMIN);
         app.post("/registration", UserController::create, Roles.GUEST, Roles.USER, Roles.ADMIN);
         app.get("/registration", RegistrationController::index, Roles.GUEST, Roles.USER, Roles.ADMIN);
         app.get("/login", LoginController::index, Roles.GUEST, Roles.USER, Roles.ADMIN);
         app.post("/login", UserController::login, Roles.GUEST, Roles.USER, Roles.ADMIN);
         app.get("/logout", UserController::logout, Roles.USER, Roles.ADMIN);
+        app.get("/users", UserController::index, Roles.ADMIN);
 
         return app;
     }
