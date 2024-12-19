@@ -24,8 +24,8 @@ public class StartController {
 
         page.setFlash(ctx.consumeSessionAttribute("flash"));
 
-        var login = ctx.cookie("jwt");
-        BasePage.setLogin(login == null || login.equals("") ? false : true);
+        //var login = ctx.cookie("jwt");
+        //BasePage.setLogin(login == null || login.equals("") ? false : true);
 
         ctx.render("start.jte", model("page", page));
     }

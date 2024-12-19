@@ -12,8 +12,8 @@ import io.javalin.validation.ValidationException;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import model.User;
-import repository.GameRepository;
-import repository.UserRepository;
+import service.GameService;
+import service.UserService;
 import utils.NamedRoutes;
 
 import java.sql.SQLException;
@@ -24,7 +24,7 @@ public class UserController {
     private static final JWTProvider<User> provider = Provider.create();
 
     public static void index(Context ctx) throws SQLException {
-        var users = UserRepository.getAll();
+        var users = UserService.getAll();
         var page = new UsersPage(users);
         ctx.status(HttpStatus.OK);
         ctx.render("users/index.jte", model("page", page));
@@ -32,9 +32,8 @@ public class UserController {
 
     public static void show(Context ctx) throws SQLException {
         var id = ctx.pathParamAsClass("id", Long.class).get();
-        var user = UserRepository.findById(id)
-                .orElseThrow(() -> new NotFoundResponse("Entity with id = " + id + " not found"));
-        var games = GameRepository.getAllGameForUser(id);
+        var user = UserService.findById(id).get();
+        var games = GameService.getAllGameForUser(id);
         var page = new UserPage(user, games);
         page.setFlash(ctx.consumeSessionAttribute("flash"));
         ctx.status(HttpStatus.OK);
@@ -45,20 +44,20 @@ public class UserController {
         var name = ctx.formParam("name");
         var email = ctx.formParam("email");
         var password = ctx.formParam("password");
-        var level = ctx.formParamAsClass("level", String.class).getOrDefault("user");
+        //var level = ctx.formParamAsClass("level", String.class).getOrDefault("user");
         if (isValidName(name) && isValidEmail(email) && isValidPassword(password)) {
             try {
                 ctx.formParamAsClass("email", String.class)
                         .check(value -> {
                             try {
-                                return UserRepository.existByEmail(email);
+                                return UserService.existByEmail(email);
                             } catch (SQLException e) {
                                 throw new RuntimeException(e);
                             }
                         }, "Игрок с таким " + email + " уже существует").get();
                 var passwordHash = SCryptUtil.scrypt(password, 2, 2, 2);
-                var user = new User(name, email, passwordHash, level);
-                var id = UserRepository.save(user);
+                var user = new User(name, email, passwordHash, "user");
+                var id = UserService.create(user);
 
                 var token = provider.generateToken(user);
                 ctx.cookie("jwt", token);
@@ -70,12 +69,12 @@ public class UserController {
             } catch (ValidationException e) {
                 ctx.sessionAttribute("flash", "Игрок с таким " + email + " уже существует");
                 ctx.status(HttpStatus.BAD_REQUEST);
-                ctx.redirect("/registration");
+                ctx.redirect(NamedRoutes.registrationPath());
             }
         } else {
             ctx.sessionAttribute("flash", "Неккоректные данные");
             ctx.status(HttpStatus.BAD_REQUEST);
-            ctx.redirect("/registration");
+            ctx.redirect(NamedRoutes.registrationPath());
         }
     }
 
@@ -83,8 +82,7 @@ public class UserController {
         try {
             var email = ctx.formParam("email");
             var password = ctx.formParam("password");
-            var user = UserRepository.findByEmail(email)
-                    .orElseThrow(() -> new NotFoundResponse("User with " + email + " not found"));
+            var user = UserService.findByEmail(email).get();
             if (user.getPassword() != null && SCryptUtil.check(password, user.getPassword())) {
 
                 var token = provider.generateToken(user);
@@ -96,15 +94,15 @@ public class UserController {
             } else if (user.getEmail() == null) {
                 ctx.sessionAttribute("flash", "Игрок с email - \"" + ctx.formParam("email") + "\" не существует");
                 ctx.status(422);
-                ctx.redirect("/login");
+                ctx.redirect(NamedRoutes.loginPath());
             } else {
                 ctx.status(422);
                 ctx.sessionAttribute("flash", "Некорректные логин или пароль");
-                ctx.redirect("/login");
+                ctx.redirect(NamedRoutes.loginPath());
             }
         } catch (SQLException | NotFoundResponse e) {
             ctx.status(422);
-            ctx.redirect("/login");
+            ctx.redirect(NamedRoutes.loginPath());
         }
     }
 
@@ -116,11 +114,11 @@ public class UserController {
     }
 
     public static void destroy(Context ctx) throws SQLException {
-        var id = ctx.pathParamAsClass("id", Long.class).get();
-        GameRepository.deleteAllGameForUser(id);
-        UserRepository.delete(id);
+        var id = ctx.formParamAsClass("id", Long.class).get();
+        GameService.destroy(id);
+        UserService.delete(id);
         ctx.status(HttpStatus.OK);
-        ctx.redirect(NamedRoutes.userPath(id));
+        ctx.redirect(NamedRoutes.usersPath());
     }
 
     private static boolean isValidName(String name) {

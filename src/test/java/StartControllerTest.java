@@ -27,7 +27,9 @@ public class StartControllerTest {
     // Successfully retrieves all users from repository and renders index page
     @Test
     public void indexRendersUsersPageTest() throws SQLException {
-        List<User> users = Arrays.asList(new User("user1"), new User("user2"));
+        User user1 = new User("Ivan", "ivan@gmail.com", "wqerty", "user");
+        User user2 = new User("Dana", "dana@gmail.com", "wqerty", "user");
+        List<User> users = Arrays.asList(user1, user2);
 
         try (MockedStatic<UserRepository> mockedRepo = mockStatic(UserRepository.class)) {
             mockedRepo.when(UserRepository::getAll).thenReturn(users);

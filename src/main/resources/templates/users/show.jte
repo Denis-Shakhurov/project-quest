@@ -30,6 +30,8 @@ content = @`
                         </tbody>
                     @endfor
                 </table>
+                <form action="${NamedRoutes.userPath(page.getUser().getId())}" method="post" class="rss-form text-body">
+                    <button type="submit" class="btn btn-danger">Удалить все игры</button></form>
             @endif
         </div>
     </section>

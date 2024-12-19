@@ -1,4 +1,5 @@
 import io.javalin.Javalin;
+import io.javalin.http.HttpStatus;
 import io.javalin.testtools.JavalinTest;
 import model.FactoryGame;
 import model.User;
@@ -32,8 +33,9 @@ public class GameControllerTest {
         var html = Files.readString(Paths.get("src/test/resources/pageForTest.html"));
         var serverResponse = new MockResponse()
                 .addHeader("Content-Type", "text/html; charset=utf-8")
-                .setResponseCode(200)
+                .setResponseCode(HttpStatus.OK.getCode())
                 .setBody(html);
+
         mockBackEnd.enqueue(serverResponse);
         mockBackEnd.start();
     }
@@ -50,7 +52,7 @@ public class GameControllerTest {
 
     @Test
     public void showGameTest() throws SQLException {
-        User user = new User("Martin");
+        User user = new User("Ivan", "ivan@gmail.com", "wqerty", "user");
         UserRepository.save(user);
 
         Game game = factoryGame.getGame("CalcGame");
@@ -76,7 +78,7 @@ public class GameControllerTest {
 
     @Test
     public void createGameSuccessTest() throws SQLException {
-        User user = new User("TestUser");
+        User user = new User("Ivan", "ivan@gmail.com", "wqerty", "user");
         Long userId = UserRepository.save(user);
 
         Game gameExpected = new FactoryGame().getGame("CalcGame");

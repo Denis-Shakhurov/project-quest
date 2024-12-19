@@ -1,6 +1,8 @@
+import config.Provider;
 import controller.UserController;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.javalin.http.HttpStatus;
 import io.javalin.testtools.JavalinTest;
 import model.User;
 import okhttp3.mockwebserver.MockResponse;
@@ -12,7 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import repository.UserRepository;
+import utils.NamedRoutes;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -55,13 +60,13 @@ public class UserControllerTest {
 
     @Test
     public void showUserTest() throws SQLException {
-        User user = new User("Elf");
+        User user = new User("Ivan", "ivan@gmail.com", "wqerty", "user");
         UserRepository.save(user);
 
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/users/" + user.getId());
 
-            assertEquals(200, response.code());
+            assertEquals(HttpStatus.OK, response.code());
             assertTrue(response.body().string().contains(user.getName()));
         });
     }
@@ -77,10 +82,10 @@ public class UserControllerTest {
 
     @Test
     public void createUserSuccessTest() throws SQLException {
-        User userExpected = new User("TestUser");
+        User userExpected = new User("Ivan", "ivan@gmail.com", "wqerty", "user");
         Long id = UserRepository.save(userExpected);
         JavalinTest.test(app, (server, client) -> {
-            client.post("/");
+            client.post(NamedRoutes.startPath());
 
             var userActual = UserRepository.findById(id).get();
             assertEquals(userExpected.getName(), userActual.getName());
@@ -91,23 +96,27 @@ public class UserControllerTest {
     @ValueSource(strings = {"  ", "ser"})
     public void createUserWithWrongName(String  name) throws SQLException {
         when(ctx.formParam("name")).thenReturn(name);
+        when(ctx.formParam("email")).thenReturn("test@nail.com");
+        when(ctx.formParam("password")).thenReturn("password");
 
         UserController.create(ctx);
 
-        verify(ctx).status(422);
-        verify(ctx).sessionAttribute("flash", "Неккоректное имя");
-        verify(ctx).redirect("/");
+        verify(ctx).status(HttpStatus.BAD_REQUEST);
+        verify(ctx).sessionAttribute("flash", "Неккоректные данные");
+        verify(ctx).redirect(NamedRoutes.registrationPath());
     }
 
     @ParameterizedTest
     @NullSource
     public void createUserWithNullName(String  name) throws SQLException {
         when(ctx.formParam("name")).thenReturn(name);
+        when(ctx.formParam("email")).thenReturn("test@nail.com");
+        when(ctx.formParam("password")).thenReturn("password");
 
         UserController.create(ctx);
 
-        verify(ctx).status(422);
-        verify(ctx).sessionAttribute("flash", "Неккоректное имя");
-        verify(ctx).redirect("/");
+        verify(ctx).status(HttpStatus.BAD_REQUEST);
+        verify(ctx).sessionAttribute("flash", "Неккоректные данные");
+        verify(ctx).redirect(NamedRoutes.registrationPath());
     }
 }

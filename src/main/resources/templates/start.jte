@@ -27,46 +27,52 @@ content = @`
                 <div class="card"><img class="card-img-top w-100 d-block fit-cover" style="height: 200px;" src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png">
                     <div class="card-body p-4">
                         <h4 class="card-title">Игра "Калькулятор"</h4>
-                        <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+                        <p class="card-text">В данной игре для двух чисел нужно произвести математическую операцию "+", "-", "*" или "/" и дать верный ответ.</p>
                         <div class="d-flex">
                             <div></div>
                         </div>
                         @if(page.getUser() != null)
-                        <form action="${NamedRoutes.userPath(page.getUser().getId())}" method="post" name="CalcGame" class="rss-form text-body">
-                        <button class="btn btn-primary" type="submit" name="game" value="CalcGame">Играть</button>
-                        </form>
+                            <form action="${NamedRoutes.startPath()}" method="post" name="CalcGame" class="rss-form text-body">
+                                <button class="btn btn-primary" type="submit" name="game" value="CalcGame">Играть</button>
+                            </form>
+                        @else
+                            <p>чтобы играть нужна авторизация</p>
                         @endif
                     </div>
                 </div>
             </div>
             <div class="col">
-                <div class="card"><img class="card-img-top w-100 d-block fit-cover" style="height: 200px;" src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png">
+                <div class="card"><img class="card-img-top w-100 d-block fit-cover" style="height: 200px;" src="images/Event.png">
                     <div class="card-body p-4">
                         <h4 class="card-title">Игра "Чётное/не чётное"</h4>
-                        <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+                        <p class="card-text">В данной игре для числа нужно определить является ли оно чётным или не чйтным, ответив "да" или "нет"</p>
                         <div class="d-flex">
                             <div></div>
                         </div>
                         @if(page.getUser() != null)
-                            <form action="${NamedRoutes.userPath(page.getUser().getId())}" method="post" name="EvenGame" class="rss-form text-body">
+                            <form action="${NamedRoutes.startPath()}" method="post" name="EvenGame" class="rss-form text-body">
                                 <button class="btn btn-primary" type="submit" name="game" value="EvenGame">Играть</button>
                             </form>
+                        @else
+                            <p>чтобы играть нужна авторизация</p>
                         @endif
                     </div>
                 </div>
             </div>
             <div class="col">
-                <div class="card"><img class="card-img-top w-100 d-block fit-cover" style="height: 200px;" src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png">
+                <div class="card"><img class="card-img-top w-100 d-block fit-cover" style="height: 200px;" src="/resources/images/Progression.png">
                     <div class="card-body p-4">
                         <h4 class="card-title">Игра "Прогрессия"</h4>
-                        <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+                        <p class="card-text">В данной игре предоставляется прогрессия с пропущенным числом нужно ответить какое число пропущено.</p>
                         <div class="d-flex">
                             <div></div>
                         </div>
                         @if(page.getUser() != null)
-                            <form action="${NamedRoutes.userPath(page.getUser().getId())}" method="post" name="ProgressionGame" class="rss-form text-body">
+                            <form action="${NamedRoutes.startPath()}" method="post" name="ProgressionGame" class="rss-form text-body">
                                 <button class="btn btn-primary" type="submit" name="game" value="ProgressionGame">Играть</button>
                             </form>
+                        @else
+                            <p>чтобы играть нужна авторизация</p>
                         @endif
                 </div>
             </div>

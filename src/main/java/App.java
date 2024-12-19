@@ -2,7 +2,12 @@ import com.lambdaworks.crypto.SCryptUtil;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import config.Provider;
-import controller.*;
+import controller.GameController;
+import controller.LoginController;
+import controller.RegistrationController;
+import controller.StartController;
+import controller.StatisticController;
+import controller.UserController;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import gg.jte.resolve.ResourceCodeResolver;
@@ -76,22 +81,27 @@ public class App {
 
         // set the paths
         app.before(decodeHandler);
-        //app.accessManager(accessManager);
         app.beforeMatched(accessManager);
 
         app.get(NamedRoutes.startPath(), StartController::index, Roles.GUEST, Roles.USER, Roles.ADMIN);
-        app.post(NamedRoutes.userPath("{id}"), GameController::create, Roles.USER, Roles.ADMIN);
-        app.post(NamedRoutes.startPath(), UserController::create, Roles.GUEST, Roles.USER, Roles.ADMIN);
-        app.get(NamedRoutes.userPath("{id}"), UserController::show, Roles.USER, Roles.ADMIN);
+
+        app.post(NamedRoutes.startPath(), GameController::create, Roles.USER, Roles.ADMIN);
         app.get(NamedRoutes.gamePath("{id}"), GameController::show, Roles.USER, Roles.ADMIN);
         app.post(NamedRoutes.gamePath("{id}"), GameController::show, Roles.USER, Roles.ADMIN);
+        app.post(NamedRoutes.userPath("{id}"), GameController::destroy, Roles.USER, Roles.ADMIN);
+
+        app.get(NamedRoutes.userPath("{id}"), UserController::show, Roles.USER, Roles.ADMIN);
+        app.post(NamedRoutes.registrationPath(), UserController::create, Roles.GUEST, Roles.USER, Roles.ADMIN);
+        app.post(NamedRoutes.loginPath(), UserController::login, Roles.GUEST, Roles.USER, Roles.ADMIN);
+        app.get(NamedRoutes.logoutPath(), UserController::logout, Roles.USER, Roles.ADMIN);
+        app.get(NamedRoutes.usersPath(), UserController::index, Roles.ADMIN);
+        app.post(NamedRoutes.usersPath(), UserController::destroy, Roles.ADMIN);
+
         app.get(NamedRoutes.statisticPath(), StatisticController::index, Roles.GUEST, Roles.USER, Roles.ADMIN);
-        app.post("/registration", UserController::create, Roles.GUEST, Roles.USER, Roles.ADMIN);
-        app.get("/registration", RegistrationController::index, Roles.GUEST, Roles.USER, Roles.ADMIN);
-        app.get("/login", LoginController::index, Roles.GUEST, Roles.USER, Roles.ADMIN);
-        app.post("/login", UserController::login, Roles.GUEST, Roles.USER, Roles.ADMIN);
-        app.get("/logout", UserController::logout, Roles.USER, Roles.ADMIN);
-        app.get("/users", UserController::index, Roles.ADMIN);
+
+        app.get(NamedRoutes.registrationPath(), RegistrationController::index, Roles.GUEST, Roles.USER, Roles.ADMIN);
+
+        app.get(NamedRoutes.loginPath(), LoginController::index, Roles.GUEST, Roles.USER, Roles.ADMIN);
 
         return app;
     }

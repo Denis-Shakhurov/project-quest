@@ -113,7 +113,7 @@ public class UserRepository extends BaseRepository {
     }
 
     public static void delete(Long id) throws SQLException {
-        var sql = "DELETE FROM users WHERE user_id = ?";
+        var sql = "DELETE FROM users WHERE id = ?";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);

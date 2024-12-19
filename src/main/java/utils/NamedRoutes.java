@@ -9,6 +9,10 @@ public class NamedRoutes {
         return "/statistic";
     }
 
+    public static String usersPath() {
+        return "/users";
+    }
+
     public static String userPath(String id) {
         return "/users/" + id;
     }
@@ -23,5 +27,25 @@ public class NamedRoutes {
 
     public static String gamePath(Long id) {
         return gamePath(String.valueOf(id));
+    }
+
+    public static String loginPath() {
+        return "/login";
+    }
+
+    public static String logoutPath() {
+        return "/logout";
+    }
+
+    public static String registrationPath() {
+        return "/registration";
+    }
+
+    public static String editUserPath(String id) {
+        return "/users/" + id + "/edit";
+    }
+
+    public static String editUserPath(Long id) {
+        return editUserPath(String.valueOf(id));
     }
 }
