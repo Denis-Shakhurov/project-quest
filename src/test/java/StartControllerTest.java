@@ -1,64 +1,59 @@
 import controller.StartController;
-import dto.UsersPage;
+import dto.UserPage;
 import io.javalin.http.Context;
 import model.User;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
 import repository.UserRepository;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class StartControllerTest {
-    private final Context ctx =  mock(Context.class);
+    private static Context ctx;
 
-    // Successfully retrieves all users from repository and renders index page
+    @BeforeEach
+    public final void setUp() throws Exception {
+        ctx = mock(Context.class);
+    }
+
     @Test
-    public void indexRendersUsersPageTest() throws SQLException {
-        User user1 = new User("Ivan", "ivan@gmail.com", "wqerty", "user");
-        User user2 = new User("Dana", "dana@gmail.com", "wqerty", "user");
-        List<User> users = Arrays.asList(user1, user2);
+    @DisplayName("Valid userId cookie returns correct user data and renders page")
+    public void validUserIdCookieReturnsUserDataTest() throws SQLException {
+        when(ctx.cookie("userId")).thenReturn("1");
 
-        try (MockedStatic<UserRepository> mockedRepo = mockStatic(UserRepository.class)) {
-            mockedRepo.when(UserRepository::getAll).thenReturn(users);
+        User expectedUser = new User("John", "john@email.com", "pass123", "beginner");
+        expectedUser.setId(1L);
 
+        try (MockedStatic<UserRepository> userRepositoryMock = mockStatic(UserRepository.class)) {
+
+            userRepositoryMock.when(() -> UserRepository.findById(1L)).thenReturn(Optional.of(expectedUser));
             StartController.index(ctx);
 
-            ArgumentCaptor<String> templateCaptor = ArgumentCaptor.forClass(String.class);
-            ArgumentCaptor<Map<String, Object>> modelCaptor = ArgumentCaptor.forClass(Map.class);
-
-            verify(ctx).render(templateCaptor.capture(), modelCaptor.capture());
-
-            assertEquals("start.jte", templateCaptor.getValue());
-            UsersPage capturedPage = (UsersPage) modelCaptor.getValue().get("page");
-            assertEquals(users, capturedPage.getUsers());
+            verify(ctx).render(eq("start.jte"), argThat(model -> {
+                UserPage page = (UserPage) ((Map<String, Object>) model).get("page");
+                return page.getUser().getId().equals(1L) &&
+                        page.getUser().getName().equals("John") &&
+                        page.getUser().getEmail().equals("john@email.com");
+            }));
         }
     }
 
-    // Handles SQL exceptions when database connection fails
     @Test
-    public void indexHandlesSqlExceptionTest() {
+    @DisplayName("Empty userId cookie returns null user")
+    public void emptyUserIdCookieReturnsNullUserTest() throws SQLException {
+        when(ctx.cookie("userId")).thenReturn("");
 
-        try (MockedStatic<UserRepository> mockedRepo = mockStatic(UserRepository.class)) {
-            mockedRepo.when(UserRepository::getAll).thenThrow(new SQLException("DB connection failed"));
+        StartController.index(ctx);
 
-            assertThrows(SQLException.class, () -> {
-                StartController.index(ctx);
-            });
-
-            verify(ctx, never()).render(anyString(), any());
-        }
+        verify(ctx).render(eq("start.jte"), argThat(model -> {
+            UserPage page = (UserPage) ((Map<String,Object>)model).get("page");
+            return page.getUser() == null;
+        }));
     }
 }

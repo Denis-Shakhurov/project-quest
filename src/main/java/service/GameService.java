@@ -6,6 +6,7 @@ import repository.GameRepository;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class GameService {
 
@@ -13,9 +14,8 @@ public class GameService {
         return GameRepository.save(game);
     }
 
-    public static Game findById(Long id) throws SQLException {
-        return GameRepository.findById(id)
-                .orElseThrow(() -> new NotFoundResponse("Entity with id = " + id + " not found"));
+    public static Optional<Game> findById(Long id) throws SQLException {
+        return GameRepository.findById(id);
     }
 
     public static List<Game> getAllGameForUser(Long userId) throws SQLException {

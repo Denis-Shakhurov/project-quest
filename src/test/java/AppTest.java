@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.NamedRoutes;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -44,7 +45,7 @@ public class AppTest {
     @Test
     public void startPageTest() {
         JavalinTest.test(app, (server, client) -> {
-            var response = client.get("/");
+            var response = client.get(NamedRoutes.startPath());
 
             assertEquals(200, response.code());
             assertTrue(response.body().string().contains("QuestGame"));
@@ -54,7 +55,7 @@ public class AppTest {
     @Test
     public void statisticPageTest() {
         JavalinTest.test(app, (server, client) -> {
-            var response = client.get("/statistic");
+            var response = client.get(NamedRoutes.statisticPath());
 
             assertEquals(200, response.code());
             assertTrue(response.body().string().contains("Статистика игр"));

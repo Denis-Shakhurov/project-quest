@@ -17,6 +17,7 @@ import service.UserService;
 import utils.NamedRoutes;
 
 import java.sql.SQLException;
+import java.util.Objects;
 
 import static io.javalin.rendering.template.TemplateUtil.model;
 
@@ -31,8 +32,9 @@ public class UserController {
     }
 
     public static void show(Context ctx) throws SQLException {
-        var id = ctx.pathParamAsClass("id", Long.class).get();
-        var user = UserService.findById(id).get();
+        var id = Long.parseLong(ctx.pathParam("id"));
+        var user = UserService.findById(id)
+                .orElseThrow(() -> new NotFoundResponse("User with id = " + id + " not found"));
         var games = GameService.getAllGameForUser(id);
         var page = new UserPage(user, games);
         page.setFlash(ctx.consumeSessionAttribute("flash"));
@@ -82,7 +84,8 @@ public class UserController {
         try {
             var email = ctx.formParam("email");
             var password = ctx.formParam("password");
-            var user = UserService.findByEmail(email).get();
+            var user = UserService.findByEmail(email)
+                    .orElseThrow(() -> new NotFoundResponse("User with email = " + email + " not found"));
             if (user.getPassword() != null && SCryptUtil.check(password, user.getPassword())) {
 
                 var token = provider.generateToken(user);
@@ -93,15 +96,15 @@ public class UserController {
                 ctx.redirect(NamedRoutes.startPath());
             } else if (user.getEmail() == null) {
                 ctx.sessionAttribute("flash", "Игрок с email - \"" + ctx.formParam("email") + "\" не существует");
-                ctx.status(422);
+                ctx.status(HttpStatus.BAD_REQUEST);
                 ctx.redirect(NamedRoutes.loginPath());
             } else {
-                ctx.status(422);
+                ctx.status(HttpStatus.BAD_REQUEST);
                 ctx.sessionAttribute("flash", "Некорректные логин или пароль");
                 ctx.redirect(NamedRoutes.loginPath());
             }
         } catch (SQLException | NotFoundResponse e) {
-            ctx.status(422);
+            ctx.status(HttpStatus.BAD_REQUEST);
             ctx.redirect(NamedRoutes.loginPath());
         }
     }
@@ -114,7 +117,7 @@ public class UserController {
     }
 
     public static void destroy(Context ctx) throws SQLException {
-        var id = ctx.formParamAsClass("id", Long.class).get();
+        var id = Long.parseLong(Objects.requireNonNull(ctx.formParam("id")));
         GameService.destroy(id);
         UserService.delete(id);
         ctx.status(HttpStatus.OK);

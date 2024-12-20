@@ -3,6 +3,7 @@ package controller;
 import dto.GamePage;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
+import io.javalin.http.NotFoundResponse;
 import model.FactoryGame;
 import model.game.Game;
 import service.GameService;
@@ -10,6 +11,7 @@ import utils.NamedRoutes;
 
 import java.sql.SQLException;
 import java.util.ArrayDeque;
+import java.util.Objects;
 
 import static io.javalin.rendering.template.TemplateUtil.model;
 
@@ -21,7 +23,7 @@ public class GameController {
         FactoryGame factoryGame = new FactoryGame();
         String nameGame = ctx.formParam("game");
         //var userId = ctx.pathParamAsClass("id", Long.class).getOrDefault(null);
-        var userId = Long.parseLong(ctx.cookie("userId"));
+        var userId = Long.parseLong(Objects.requireNonNull(ctx.cookie("userId")));
         Game game = factoryGame.getGame(nameGame);
         game.setUserId(userId);
         var gameId = GameService.create(game);
@@ -30,8 +32,9 @@ public class GameController {
     }
 
     public static void show(Context ctx) throws SQLException {
-        var id = ctx.pathParamAsClass("id", Long.class).get();
-        var game = GameService.findById(id);
+        var id = Long.parseLong(ctx.pathParam("id"));
+        var game = GameService.findById(id)
+                .orElseThrow(() -> new NotFoundResponse("Game with id = " + id + " not found"));
 
         var page = new GamePage(game);
         var answerUser = ctx.formParam("answer");
@@ -68,11 +71,12 @@ public class GameController {
 
         GameService.update(game);
         page.setFlash(ctx.consumeSessionAttribute("flash"));
-        ctx.render("games/show.jte", model("page", page)).status(HttpStatus.OK);
+        ctx.status(HttpStatus.OK);
+        ctx.render("games/show.jte", model("page", page));
     }
 
     public static void destroy(Context ctx) throws SQLException {
-        var userId = ctx.pathParamAsClass("id", Long.class).get();
+        var userId = Long.parseLong(ctx.pathParam("id"));
         GameService.destroy(userId);
         ctx.status(HttpStatus.OK);
         ctx.redirect(NamedRoutes.userPath(userId));
