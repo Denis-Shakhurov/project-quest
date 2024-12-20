@@ -42,7 +42,7 @@ content = @`
                 </div>
             </div>
             <div class="col">
-                <div class="card"><img class="card-img-top w-100 d-block fit-cover" style="height: 200px;" src="images/Event.png">
+                <div class="card"><img class="card-img-top w-100 d-block fit-cover" style="height: 200px;" src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png">
                     <div class="card-body p-4">
                         <h4 class="card-title">Игра "Чётное/не чётное"</h4>
                         <p class="card-text">В данной игре для числа нужно определить является ли оно чётным или не чйтным, ответив "да" или "нет"</p>
@@ -60,7 +60,7 @@ content = @`
                 </div>
             </div>
             <div class="col">
-                <div class="card"><img class="card-img-top w-100 d-block fit-cover" style="height: 200px;" src="/resources/images/Progression.png">
+                <div class="card"><img class="card-img-top w-100 d-block fit-cover" style="height: 200px;" src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png">
                     <div class="card-body p-4">
                         <h4 class="card-title">Игра "Прогрессия"</h4>
                         <p class="card-text">В данной игре предоставляется прогрессия с пропущенным числом нужно ответить какое число пропущено.</p>

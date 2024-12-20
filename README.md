@@ -15,4 +15,6 @@
 ```java -jar {path to file}/AppQuest-jar-with-dependencies.jar```
 
 ---
-После запуска прилжение доступно по адрусу: http://localhost:8080/
+После запуска:
+* прилжение доступно по адрусу: http://localhost:8080/
+* в приложении создан пользователь "админ", используйте: `login: admin@mail.com` и `password: password` для входа.
