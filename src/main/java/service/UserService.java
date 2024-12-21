@@ -9,27 +9,51 @@ import java.util.Optional;
 
 public class UserService {
 
-    public static List<User> getAll() throws SQLException {
-        return UserRepository.getAll();
+    public static List<User> getAll() {
+        try {
+            return UserRepository.getAll();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static Optional<User> findById(Long id) throws SQLException {
-        return UserRepository.findById(id);
+    public static Optional<User> findById(Long id) {
+        try {
+            return UserRepository.findById(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static Optional<User> findByEmail(String email) throws SQLException {
-        return UserRepository.findByEmail(email);
+    public static Optional<User> findByEmail(String email) {
+        try {
+            return UserRepository.findByEmail(email);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static boolean existByEmail(String email) throws SQLException {
-        return UserRepository.existByEmail(email);
+    public static boolean existByEmail(String email) {
+        try {
+            return UserRepository.existByEmail(email);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static Long create(User user) throws SQLException {
-        return UserRepository.save(user);
+    public static Long create(User user) {
+        try {
+            return UserRepository.save(user);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static void delete(Long id) throws SQLException {
-        UserRepository.delete(id);
+    public static void delete(Long id) {
+        try {
+            UserRepository.delete(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

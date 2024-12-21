@@ -11,13 +11,13 @@ import java.util.Optional;
 public class UserRepository extends BaseRepository {
 
     public static Long save(User user) throws SQLException {
-        var sql = "INSERT INTO users (name, email, password, level_status) VALUES (?, ?, ?, ?)";
+        var sql = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, user.getName());
             stmt.setString(2, user.getEmail());
             stmt.setString(3, user.getPassword());
-            stmt.setString(4, user.getLevel());
+            stmt.setString(4, user.getRole());
             stmt.executeUpdate();
             var generatedKey = stmt.getGeneratedKeys();
             if (generatedKey.next()) {
@@ -40,8 +40,8 @@ public class UserRepository extends BaseRepository {
                 var name = resultSet.getString("name");
                 var email = resultSet.getString("email");
                 var password = resultSet.getString("password");
-                var level = resultSet.getString("level_status");
-                var user = new User(name, email, password, level);
+                var role = resultSet.getString("role");
+                var user = new User(name, email, password, role);
                 user.setId(id);
                 users.add(user);
             }
@@ -59,8 +59,8 @@ public class UserRepository extends BaseRepository {
                 var name = resultSet.getString("name");
                 var email = resultSet.getString("email");
                 var password = resultSet.getString("password");
-                var level = resultSet.getString("level_status");
-                var user = new User(name, email, password, level);
+                var role = resultSet.getString("role");
+                var user = new User(name, email, password, role);
                 user.setId(id);
                 return Optional.of(user);
             }
@@ -80,8 +80,8 @@ public class UserRepository extends BaseRepository {
                 var name = resultSet.getString("name");
                 var email = resultSet.getString("email");
                 var password = resultSet.getString("password");
-                var level = resultSet.getString("level_status");
-                var user = new User(name, email, password, level);
+                var role = resultSet.getString("role");
+                var user = new User(name, email, password, role);
                 user.setId(id);
                 users.add(user);
             }
@@ -101,11 +101,11 @@ public class UserRepository extends BaseRepository {
                 var name = resultSet.getString("name");
                 var email = resultSet.getString("email");
                 var password = resultSet.getString("password");
-                var level = resultSet.getString("level_status");
+                var role = resultSet.getString("role");
                 user.setName(name);
                 user.setEmail(email);
                 user.setPassword(password);
-                user.setLevel(level);
+                user.setRole(role);
                 user.setId(id);
             }
         }

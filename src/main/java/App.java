@@ -77,7 +77,7 @@ public class App {
             put("admin", Roles.ADMIN);
         }};
 
-        JWTAccessManager accessManager = new JWTAccessManager("level", rolesMapping, Roles.GUEST);
+        JWTAccessManager accessManager = new JWTAccessManager("role", rolesMapping, Roles.GUEST);
 
         // set the paths
         app.before(decodeHandler);

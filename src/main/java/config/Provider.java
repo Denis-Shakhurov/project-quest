@@ -14,7 +14,7 @@ public class Provider {
         JWTGenerator<User> generator = (user, alg) -> {
             JWTCreator.Builder token = JWT.create()
                     .withClaim("name", user.getName())
-                    .withClaim("level", user.getLevel());
+                    .withClaim("role", user.getRole());
             return token.sign(alg);
         };
 

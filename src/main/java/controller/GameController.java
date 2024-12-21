@@ -9,7 +9,6 @@ import model.game.Game;
 import service.GameService;
 import utils.NamedRoutes;
 
-import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.Objects;
 
@@ -19,7 +18,7 @@ public class GameController {
     private static final ArrayDeque<String> answers = new ArrayDeque<>();
     private static int count = 0;
 
-    public static void create(Context ctx) throws SQLException {
+    public static void create(Context ctx) {
         FactoryGame factoryGame = new FactoryGame();
         String nameGame = ctx.formParam("game");
         //var userId = ctx.pathParamAsClass("id", Long.class).getOrDefault(null);
@@ -31,7 +30,7 @@ public class GameController {
         ctx.redirect(NamedRoutes.gamePath(gameId));
     }
 
-    public static void show(Context ctx) throws SQLException {
+    public static void show(Context ctx) {
         var id = Long.parseLong(ctx.pathParam("id"));
         var game = GameService.findById(id)
                 .orElseThrow(() -> new NotFoundResponse("Game with id = " + id + " not found"));
@@ -75,7 +74,7 @@ public class GameController {
         ctx.render("games/show.jte", model("page", page));
     }
 
-    public static void destroy(Context ctx) throws SQLException {
+    public static void destroy(Context ctx) {
         var userId = Long.parseLong(ctx.pathParam("id"));
         GameService.destroy(userId);
         ctx.status(HttpStatus.OK);

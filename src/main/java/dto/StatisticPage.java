@@ -1,6 +1,5 @@
 package dto;
 
-import model.User;
 import model.game.Game;
 
 import java.util.List;

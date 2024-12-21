@@ -34,6 +34,6 @@ public class StartController {
         return user == null ? new HashMap<>() : Map.of("id", String.valueOf(user.getId()),
                 "name", user.getName(),
                 "email", user.getEmail(),
-                "level", user.getLevel());
+                "role", user.getRole());
     }
 }

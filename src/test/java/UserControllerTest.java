@@ -149,6 +149,7 @@ public class UserControllerTest {
         when(ctx.formParam("name")).thenReturn(name);
         when(ctx.formParam("email")).thenReturn("test@nail.com");
         when(ctx.formParam("password")).thenReturn("password");
+        when(ctx.formParam("role")).thenReturn("user");
 
         UserController.create(ctx);
 
@@ -163,6 +164,7 @@ public class UserControllerTest {
         when(ctx.formParam("name")).thenReturn(name);
         when(ctx.formParam("email")).thenReturn("test@nail.com");
         when(ctx.formParam("password")).thenReturn("password");
+        when(ctx.formParam("role")).thenReturn("user");
 
         UserController.create(ctx);
 
@@ -171,25 +173,27 @@ public class UserControllerTest {
         verify(ctx).redirect(NamedRoutes.registrationPath());
     }
 
-    /*@Test
+    @Test
     @DisplayName("User creation with valid name, email and password creates user and sets JWT cookie")
     public void validUserCreationSetsJwtCookie() throws SQLException {
-        MockedStatic<UserService> userServiceMockedStatic = Mockito.mockStatic(UserService.class);
+        try (MockedStatic<UserService> userServiceMock = mockStatic(UserService.class)) {
 
-        when(ctx.formParam("name")).thenReturn("validName");
-        when(ctx.formParam("email")).thenReturn("test@test.com");
-        when(ctx.formParam("password")).thenReturn("password123");
+            when(ctx.formParam("name")).thenReturn("validName");
+            when(ctx.formParam("email")).thenReturn("user@test.com");
+            when(ctx.formParam("password")).thenReturn("password123");
+            when(ctx.formParam("role")).thenReturn("user");
 
-        userServiceMockedStatic.when(() -> UserService.existByEmail("test@test.com")).thenReturn(false);
-        userServiceMockedStatic.when(() -> UserService.create(any(User.class))).thenReturn(2L);
+            userServiceMock.when(() -> UserService.existByEmail("user@test.com")).thenReturn(true);
+            userServiceMock.when(() -> UserService.create(any(User.class))).thenReturn(2L);
 
-        UserController.create(ctx);
+            UserController.create(ctx);
 
-        verify(ctx).cookie(eq("jwt"), anyString());
-        verify(ctx).cookie("userId", "2");
-        verify(ctx).status(HttpStatus.CREATED);
-        verify(ctx).redirect(NamedRoutes.startPath());
-    }*/
+            verify(ctx).cookie(eq("jwt"), anyString());
+            verify(ctx).cookie("userId", "2");
+            verify(ctx).status(HttpStatus.CREATED);
+            verify(ctx).redirect(NamedRoutes.startPath());
+        }
+    }
 
     @Test
     public void logoutTest() {

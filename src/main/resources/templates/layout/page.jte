@@ -20,20 +20,20 @@
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link active" href="${NamedRoutes.startPath()}">Главная</a></li>
                 <li class="nav-item"><a class="nav-link" href="${NamedRoutes.statisticPath()}">Статистика игр</a></li>
-                @if(!BasePage.getUserInfo().isEmpty() && BasePage.getUserInfo().get("level").equals("admin"))
-                    <li class="nav-item"><a class="nav-link" href="/users">Список игроков</a></li>
+                @if(!BasePage.getUserInfo().isEmpty() && BasePage.getUserInfo().get("role").equals("admin"))
+                    <li class="nav-item"><a class="nav-link" href="${NamedRoutes.usersPath()}">Список игроков</a></li>
                 @endif
             </ul>
         </div>
         @if(BasePage.getUserInfo().isEmpty())
             <div class="d-none d-md-block">
-                <a class="btn btn-light me-2" role="button" href="/registration">Регистрация</a>
-                <a class="btn btn-primary" role="button" href="/login">Войти</a>
+                <a class="btn btn-light me-2" role="button" href="${NamedRoutes.registrationPath()}">Регистрация</a>
+                <a class="btn btn-primary" role="button" href="${NamedRoutes.loginPath()}">Войти</a>
             </div>
         @else
             <div class="d-none d-md-block">
                 <a href="${NamedRoutes.userPath(BasePage.getUserInfo().get("id"))}">${BasePage.getUserInfo().get("name")}</a>
-                <a class="btn btn-primary" role="button" href="/logout">Выйти</a>
+                <a class="btn btn-primary" role="button" href="${NamedRoutes.logoutPath()}">Выйти</a>
             </div>
         @endif
     </div>

@@ -9,7 +9,7 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private String level;
+    private String role;
     private List<Game> games;
 
     public User() {
@@ -19,7 +19,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.level = level;
+        this.role = level;
     }
 
     public Long getId() {
@@ -54,12 +54,12 @@ public class User {
         this.password = password;
     }
 
-    public String getLevel() {
-        return level;
+    public String getRole() {
+        return role;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
+    public void setRole(String level) {
+        this.role = level;
     }
 
     public List<Game> getGames() {

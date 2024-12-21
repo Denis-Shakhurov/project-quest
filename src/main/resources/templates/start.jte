@@ -31,13 +31,11 @@ content = @`
                         <div class="d-flex">
                             <div></div>
                         </div>
-                        @if(page.getUser() != null)
+
                             <form action="${NamedRoutes.startPath()}" method="post" name="CalcGame" class="rss-form text-body">
                                 <button class="btn btn-primary" type="submit" name="game" value="CalcGame">Играть</button>
                             </form>
-                        @else
-                            <p>чтобы играть нужна авторизация</p>
-                        @endif
+
                     </div>
                 </div>
             </div>

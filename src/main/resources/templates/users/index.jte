@@ -16,7 +16,7 @@ content = @`
                         <th scope="col">Id</th>
                         <th scope="col">Name</th>
                         <th scope="col">Email</th>
-                        <th scope="col">Level</th>
+                        <th scope="col">Role</th>
                         <th scope="col">Delete</th>
                     </tr>
                     </thead>
@@ -26,7 +26,7 @@ content = @`
                             <th scope="row">${user.getId()}</th>
                             <td><a href="${NamedRoutes.userPath(user.getId())}">${user.getName()}</a></td>
                             <th scope="row">${user.getEmail()}</th>
-                            <th scope="row">${user.getLevel()}</th>
+                            <th scope="row">${user.getRole()}</th>
                             <th scope="row">
                                 <form action="${NamedRoutes.usersPath()}" method="post" class="rss-form text-body">
                                 <button type="submit" name="id" value="${user.getId()}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
