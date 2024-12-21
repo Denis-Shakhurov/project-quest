@@ -5,6 +5,7 @@ import repository.GameRepository;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class GameService {
@@ -28,6 +29,14 @@ public class GameService {
     public static List<Game> getAllGameForUser(Long userId) {
         try {
             return GameRepository.getAllGameForUser(userId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static List<Map<String, Game>> getAllUserNameWithGames() {
+        try {
+            return GameRepository.getAllUserNameWithGames();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
